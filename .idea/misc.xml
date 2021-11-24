@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/layout/activity_follow.xml" value="0.1002413546795153" />
+        <entry key="app/src/main/res/layout/activity_league.xml" value="0.12182971014492754" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.12182971014492754" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.12182971014492754" />
+        <entry key="app/src/main/res/layout/activity_map_page.xml" value="0.12182971014492754" />
+        <entry key="app/src/main/res/layout/activity_my_trail_activities.xml" value="0.12182971014492754" />
+        <entry key="app/src/main/res/layout/activity_record.xml" value="0.12182971014492754" />
+        <entry key="app/src/main/res/layout/activity_register.xml" value="0.12182971014492754" />
+        <entry key="app/src/main/res/layout/activity_register_more_data.xml" value="0.23870455135694446" />
+        <entry key="app/src/main/res/layout/activity_register_trail.xml" value="0.12182971014492754" />
+        <entry key="app/src/main/res/layout/bottom_sheet_behaviour.xml" value="0.12182971014492754" />
+        <entry key="app/src/main/res/layout/bottom_sheet_behaviour2.xml" value="0.12182971014492754" />
+        <entry key="app/src/main/res/layout/rowlayout.xml" value="0.1" />
+      </map>
+    </option>
+  </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />

@@ -28,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
-        android:text="Statistics"
+        android:text="@string/record_bt_statistics"
         app:layout_constraintEnd_toEndOf="@+id/mChronometer"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -45,7 +45,7 @@
         android:id="@+id/buttonStartRecording"
         android:layout_width="277dp"
         android:layout_height="80dp"
-        android:text="START RECORDING"
+        android:text="@string/record_start"
         android:textSize="16sp"
         app:icon="@drawable/ic_play"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -82,7 +82,7 @@
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Resume"
+            android:text="@string/record_resume"
             app:icon="@drawable/ic_play" />
 
         <com.google.android.material.button.MaterialButton
@@ -90,7 +90,7 @@
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pause"
+            android:text="@string/record_pause"
             app:icon="@drawable/ic_baseline_pause_24" />
 
         <com.google.android.material.button.MaterialButton
@@ -99,7 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#FF5722"
-            android:text="End"
+            android:text="@string/record_end"
             app:icon="@drawable/ic_baseline_stop_24" />
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
@@ -121,7 +121,7 @@
             android:layout_width="188dip"
             android:layout_height="100dip"
             android:layout_centerInParent="true"
-            android:text="Save path"
+            android:text="@string/record_save"
             android:textSize="16sp"
             android:textStyle="bold"
             app:icon="@android:drawable/ic_menu_save" />
@@ -133,7 +133,7 @@
             android:layout_above="@id/buttonSaveImage"
             android:layout_centerInParent="true"
             android:layout_marginBottom="30dip"
-            android:text="Continue recording"
+            android:text="@string/record_continue"
             android:textSize="16sp"
             android:textStyle="bold"
             app:icon="?attr/homeAsUpIndicator" />
@@ -145,7 +145,7 @@
             android:layout_below="@id/buttonSaveImage"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dip"
-            android:text="Delete Path"
+            android:text="@string/record_delete"
             android:textSize="16sp"
             android:textStyle="bold"
             app:icon="@android:drawable/ic_menu_delete" />

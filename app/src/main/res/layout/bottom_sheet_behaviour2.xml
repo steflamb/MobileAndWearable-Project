@@ -17,7 +17,7 @@
             android:id="@+id/button_follow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Follow trail"
+            android:text="@string/trailinfo_bt_follow"
             app:iconTint="#FF3D00"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="32dp"
-            android:text="Name of trail"
+            android:text="@string/trailinfo_fld_name"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:textColor="#0B0606"
             app:layout_constraintEnd_toEndOf="parent"
@@ -40,7 +40,7 @@
             android:id="@+id/textView13"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Date created"
+            android:text="@string/trailinfo_fld_date_created"
             app:layout_constraintBottom_toBottomOf="@+id/textViewDistance"
             app:layout_constraintStart_toStartOf="@+id/textNameTrail" />
 
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="TextView"
+            android:text="@string/trailinfo_fld_date_val"
             app:layout_constraintBottom_toBottomOf="@+id/textViewDistance"
             app:layout_constraintStart_toEndOf="@+id/textView13" />
 
@@ -57,7 +57,7 @@
             android:id="@+id/textViewDistance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
+            android:text="@string/trailinfo_fld_dist_val"
             android:textAlignment="textEnd"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -131,7 +131,7 @@
             android:id="@+id/textView15"
             android:layout_width="111dp"
             android:layout_height="21dp"
-            android:text="Steps"
+            android:text="@string/trailinfo_fld_steps"
             app:layout_constraintStart_toEndOf="@+id/imageView3"
             app:layout_constraintTop_toTopOf="@+id/imageView3" />
 
@@ -140,7 +140,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="TextView"
+            android:text="@string/trailinfo_fld_steps_val"
             app:layout_constraintStart_toEndOf="@+id/textView15"
             app:layout_constraintTop_toTopOf="@+id/textView15" />
 
@@ -149,7 +149,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="TextView"
+            android:text="@string/trailinfo_fld_cal_val"
             app:layout_constraintStart_toEndOf="@+id/textView15"
             app:layout_constraintTop_toTopOf="@+id/textView16" />
 
@@ -158,7 +158,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="TextView"
+            android:text="@string/trailinfo_fld_speed_val"
             app:layout_constraintStart_toEndOf="@+id/textView15"
             app:layout_constraintTop_toTopOf="@+id/textView17" />
 
@@ -167,7 +167,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="TextView"
+            android:text="@string/trailinfo_fld_duration_val"
             app:layout_constraintStart_toEndOf="@+id/textView15"
             app:layout_constraintTop_toTopOf="@+id/textView18" />
 
@@ -176,7 +176,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="TextView"
+            android:text="@string/trailinfo_fld_weather_val"
             app:layout_constraintStart_toEndOf="@+id/textView15"
             app:layout_constraintTop_toTopOf="@+id/textView20" />
 
@@ -185,7 +185,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="TextView"
+            android:text="@string/trailinfo_fld_user_val"
             app:layout_constraintStart_toEndOf="@+id/textView15"
             app:layout_constraintTop_toTopOf="@+id/textView11" />
 
@@ -193,7 +193,7 @@
             android:id="@+id/textView16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Expected calories"
+            android:text="@string/trailinfo_fld_cal_expected"
             app:layout_constraintStart_toEndOf="@+id/imageView3"
             app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
@@ -201,7 +201,7 @@
             android:id="@+id/textView17"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Median speed"
+            android:text="@string/trailinfo_fld_speed"
             app:layout_constraintStart_toEndOf="@+id/imageView3"
             app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
@@ -209,7 +209,7 @@
             android:id="@+id/textView18"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Duration"
+            android:text="@string/trailinfo_fld_duration"
             app:layout_constraintStart_toEndOf="@+id/imageView3"
             app:layout_constraintTop_toBottomOf="@+id/imageView6" />
 
@@ -217,7 +217,7 @@
             android:id="@+id/textView20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Weather"
+            android:text="@string/trailinfo_fld_weather"
             app:layout_constraintStart_toEndOf="@+id/imageView3"
             app:layout_constraintTop_toBottomOf="@+id/imageView7" />
 
@@ -225,7 +225,7 @@
             android:id="@+id/textView11"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="User"
+            android:text="@string/trailinfo_fld_user"
             app:layout_constraintStart_toEndOf="@+id/imageView3"
             app:layout_constraintTop_toBottomOf="@+id/imageView8" />
 

@@ -43,7 +43,7 @@
         android:layout_width="200dp"
         android:layout_height="29dp"
         android:layout_marginStart="30dp"
-        android:text="Account Settings"
+        android:text="@string/userpage_title"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/imageView2"
@@ -54,7 +54,7 @@
         android:layout_width="240dp"
         android:layout_height="29dp"
         android:layout_marginStart="30dp"
-        android:text="Name"
+        android:text="@string/userpage_fld_name"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/imageView2"
@@ -66,7 +66,7 @@
         android:layout_height="29dp"
         android:layout_marginStart="80dp"
         android:layout_marginTop="30dp"
-        android:text="Email"
+        android:text="@string/userpage_fld_email_val"
         android:textColor="#F8F7F7"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -78,7 +78,7 @@
         android:layout_height="24dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
-        android:text="Email:"
+        android:text="@string/userpage_fld_email"
         android:textColor="#F8F7F7"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -89,7 +89,7 @@
         android:id="@+id/textView7"
         android:layout_width="240dp"
         android:layout_height="29dp"
-        android:text="Height"
+        android:text="@string/userpage_fld_height_val"
         android:textColor="#F4F1F1"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/textView6"
@@ -99,7 +99,7 @@
         android:id="@+id/textView9"
         android:layout_width="47dp"
         android:layout_height="27dp"
-        android:text="Height:"
+        android:text="@string/userpage_fld_height"
         android:textColor="#F4F1F1"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -110,7 +110,7 @@
         android:id="@+id/textView8"
         android:layout_width="240dp"
         android:layout_height="29dp"
-        android:text="Weight"
+        android:text="@string/userpage_fld_weight_val"
         android:textColor="#FBF9F9"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/textView6"
@@ -120,7 +120,7 @@
         android:id="@+id/textView10"
         android:layout_width="54dp"
         android:layout_height="27dp"
-        android:text="Weight:"
+        android:text="@string/userpage_fld_weight"
         android:textColor="#FBF9F9"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -162,14 +162,14 @@
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Steps" />
+            android:text="@string/userpage_bt_steps" />
 
         <Button
             android:id="@+id/caloriesButton"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Calories" />
+            android:text="@string/userpage_bt_calories" />
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
 <!--    <ProgressBar-->
@@ -211,7 +211,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:foregroundGravity="center"
-                        android:text="0"
+                        android:text="@string/userpage_step_total_val"
                         android:textSize="36sp" />
 
                     <TextView
@@ -219,7 +219,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:foregroundGravity="center"
-                        android:text="Total"
+                        android:text="@string/userpage_step_total"
                         android:textSize="18sp" />
                 </LinearLayout>
 
@@ -235,7 +235,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:foregroundGravity="center"
-                        android:text="0"
+                        android:text="@string/userpage_step_year_val"
                         android:textSize="36sp" />
 
                     <TextView
@@ -243,7 +243,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:foregroundGravity="center"
-                        android:text="Year"
+                        android:text="@string/userpage_step_year"
                         android:textSize="18sp" />
                 </LinearLayout>
 
@@ -259,7 +259,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:foregroundGravity="center"
-                        android:text="0"
+                        android:text="@string/userpage_step_month_val"
                         android:textSize="36sp" />
 
                     <TextView
@@ -267,7 +267,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:foregroundGravity="center"
-                        android:text="Month"
+                        android:text="@string/userpage_step_month"
                         android:textSize="18sp" />
                 </LinearLayout>
 
@@ -283,7 +283,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:foregroundGravity="center"
-                        android:text="0"
+                        android:text="@string/userpage_step_day_val"
                         android:textSize="36sp" />
 
                     <TextView
@@ -291,7 +291,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:foregroundGravity="center"
-                        android:text="Day"
+                        android:text="@string/userpage_step_day"
                         android:textSize="18sp" />
                 </LinearLayout>
 
@@ -336,7 +336,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:foregroundGravity="center"
-                        android:text="0"
+                        android:text="@string/userpage_cal_total_val"
                         android:textSize="36sp" />
 
                     <TextView
@@ -344,7 +344,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:foregroundGravity="center"
-                        android:text="Total"
+                        android:text="@string/userpage_cal_total"
                         android:textSize="18sp" />
                 </LinearLayout>
 
@@ -360,7 +360,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:foregroundGravity="center"
-                        android:text="0"
+                        android:text="@string/userpage_cal_year_val"
                         android:textSize="36sp" />
 
                     <TextView
@@ -368,7 +368,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:foregroundGravity="center"
-                        android:text="Year"
+                        android:text="@string/userpage_cal_year"
                         android:textSize="18sp" />
                 </LinearLayout>
 
@@ -384,7 +384,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:foregroundGravity="center"
-                        android:text="0"
+                        android:text="@string/userpage_cal_month_val"
                         android:textSize="36sp" />
 
                     <TextView
@@ -392,7 +392,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:foregroundGravity="center"
-                        android:text="Month"
+                        android:text="@string/userpage_cal_month"
                         android:textSize="18sp" />
                 </LinearLayout>
 
@@ -408,7 +408,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:foregroundGravity="center"
-                        android:text="0"
+                        android:text="@string/userpage_cal_day_val"
                         android:textSize="36sp" />
 
                     <TextView
@@ -416,7 +416,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:foregroundGravity="center"
-                        android:text="Day"
+                        android:text="@string/userpage_cal_day"
                         android:textSize="18sp" />
                 </LinearLayout>
 

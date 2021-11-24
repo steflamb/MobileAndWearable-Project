@@ -12,7 +12,7 @@
         android:id="@+id/buttonStatistics"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Statistics"
+        android:text="@string/follow_show_statistics"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -50,7 +50,7 @@
         android:id="@+id/buttonStartRecording"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:text="START TRAIL"
+        android:text="@string/follow_start_trail"
         android:textSize="16sp"
         app:icon="@drawable/ic_play"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -87,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#FDFDFD"
-            android:text="Resume"
+            android:text="@string/follow_resume"
             android:textColor="#000000"
             app:icon="@drawable/ic_play"
             app:iconTint="#000000" />
@@ -98,7 +98,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#FDFDFD"
-            android:text="Pause"
+            android:text="@string/follow_pause"
             android:textColor="#000000"
             app:icon="@drawable/ic_baseline_pause_24"
             app:iconTint="#000000" />
@@ -109,7 +109,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#FF5722"
-            android:text="End"
+            android:text="@string/follow_end"
             app:icon="@drawable/ic_baseline_stop_24" />
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
@@ -131,7 +131,7 @@
             android:layout_width="188dip"
             android:layout_height="100dip"
             android:layout_centerInParent="true"
-            android:text="Finish activity"
+            android:text="@string/follow_finish_activity"
             android:textSize="16sp"
             android:textStyle="bold"
             app:icon="@drawable/ic_logout_black_24dp" />
@@ -143,7 +143,7 @@
             android:layout_above="@id/buttonSaveImage"
             android:layout_centerInParent="true"
             android:layout_marginBottom="30dip"
-            android:text="Continue following"
+            android:text="@string/follow_continue_following"
             android:textSize="16sp"
             android:textStyle="bold"
             app:icon="?attr/homeAsUpIndicator" />
