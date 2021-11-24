@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.room.Room;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -64,6 +65,12 @@ public class RegisterMoreDataActivity extends AppCompatActivity {
     int currYear = currDatetime.getYear();
     int currMon = currDatetime.getMonthValue();
     int currDay = currDatetime.getDayOfMonth();
+    private static final String SHARED_PREFS = "sharedPrefs";
+
+    private String localEmail="";
+    private String nameFull="";
+    private String weightValue;
+    private String heightValue;
 
     public Bitmap createImage(int width, int height, int color, String name) {
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -92,12 +99,24 @@ public class RegisterMoreDataActivity extends AppCompatActivity {
         textViewMail=findViewById(R.id.textView6);
         userimage.setImageBitmap(createImage(200, 200,Color.LTGRAY ,"AA"));
 
+
+
+
+
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         String email="error";
 
         if(firebaseUser != null) {
             email = firebaseUser.getEmail();
 
+        }
+        else
+        {
+            SharedPreferences sharedPreferences = RegisterMoreDataActivity.this.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+            localEmail = sharedPreferences.getString("email", "");
+            name = sharedPreferences.getString("full_name", "");
+            weightValue = String.valueOf(sharedPreferences.getFloat("weight", 0));
+            heightValue = String.valueOf(sharedPreferences.getFloat("height", 0));
         }
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
@@ -109,17 +128,14 @@ public class RegisterMoreDataActivity extends AppCompatActivity {
                 }
                 else {
                     name=String.valueOf(task.getResult().getValue());
-                    textViewName.setText(name);
-                    String initials = "";
-                    for (String s : name.split(" ")) {
-                        initials+=s.charAt(0);
-                    }
-
-                    userimage.setImageBitmap(createImage(200, 200,Color.LTGRAY ,initials));
 
                 }
             }
         });
+
+
+
+
         database.getReference("users").child(firebaseUser.getUid()).child("height").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -127,10 +143,13 @@ public class RegisterMoreDataActivity extends AppCompatActivity {
                     Log.e("firebase", "Error getting data", task.getException());
                 }
                 else {
-                    textViewHeight.setText(String.valueOf(task.getResult().getValue()));
+                    heightValue=String.valueOf(task.getResult().getValue());
                 }
             }
         });
+
+
+
         database.getReference("users").child(firebaseUser.getUid()).child("weight").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -138,12 +157,21 @@ public class RegisterMoreDataActivity extends AppCompatActivity {
                     Log.e("firebase", "Error getting data", task.getException());
                 }
                 else {
-                    textViewWeight.setText(String.valueOf(task.getResult().getValue()));
+                    weightValue=String.valueOf(task.getResult().getValue());
                 }
             }
         });
 
+        textViewHeight.setText(String.valueOf(heightValue));
+        textViewWeight.setText(weightValue);
         textViewMail.setText(String.valueOf(email));
+        textViewName.setText(name);
+        String initials = "";
+        for (String s : name.split(" ")) {
+            initials+=s.charAt(0);
+        }
+
+        userimage.setImageBitmap(createImage(200, 200,Color.LTGRAY ,initials));
 
         // create plots
 

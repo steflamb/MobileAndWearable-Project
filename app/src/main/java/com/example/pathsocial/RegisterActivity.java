@@ -3,7 +3,9 @@ package com.example.pathsocial;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -41,6 +43,8 @@ public class RegisterActivity extends AppCompatActivity {
     double lbs = 0.0;
     final double change2 = 2.2046226218; //this is the change between kg and lbs, 1kg = this amount of lbs
     final double change1= 2.54;
+
+    private static final String SHARED_PREFS = "sharedPrefs";
 
 
     public static boolean isNumeric(String strNum) {
@@ -210,7 +214,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                                     double weightValue = Double.parseDouble(weight_txt.getText().toString());
                                     double heightValue = Double.parseDouble(height_txt.getText().toString());
-
+                                    String nameFull=String.valueOf(name)+" "+String.valueOf(lastname);
 
                                     if(!changed1){
                                         heightValue=(heightValue / change1);
@@ -226,6 +230,14 @@ public class RegisterActivity extends AppCompatActivity {
                                     heightRef.setValue(String.valueOf(heightValue));
                                     weightRef.setValue(String.valueOf(weightValue));
                                     startActivity(new Intent(RegisterActivity.this, MapPage.class));
+                                    SharedPreferences sharedPref = RegisterActivity.this.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedPref.edit();
+
+                                    editor.putString("email",email);
+                                    editor.putString("full_name",nameFull);
+                                    editor.putFloat("weight",(float) weightValue);
+                                    editor.putFloat("height",(float) heightValue);
+                                    editor.apply();
                                 }
                                 else
                                 {
