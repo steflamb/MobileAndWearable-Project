@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "854488854132",
+    "project_id": "pathsocial-c437e",
+    "storage_bucket": "pathsocial-c437e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:854488854132:android:640857e06579d443c0eb21",
+        "android_client_info": {
+          "package_name": "com.example.pathsocial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "854488854132-7ojbl6suk03cdoqv9mnmrd45cli39p8k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDd4LQPGUEEkiI0x_vgEVBmhn6zBYRvQoY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "854488854132-7ojbl6suk03cdoqv9mnmrd45cli39p8k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

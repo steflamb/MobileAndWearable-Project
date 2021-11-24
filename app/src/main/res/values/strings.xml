@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">PathSocial</string>
+    <string name="title_activity_navigation">NavigationActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Create</string>
+    <string name="title_notifications">Settings</string>
+    <string name="loremipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean et velit at ante elementum scelerisque. Fusce feugiat augue dui, et scelerisque metus finibus non. Pellentesque ultricies porttitor ullamcorper. Vivamus vulputate tortor lectus, in ornare eros varius et. Proin egestas et risus eu interdum. Ut imperdiet enim dictum libero elementum, ut ornare nisi euismod. Praesent ex lacus, aliquam sed leo eu, varius tincidunt ipsum. Morbi mattis purus nec tortor vestibulum, ullamcorper sollicitudin massa pharetra. Phasellus non dictum metus, vitae fermentum tellus.
+
+Aenean faucibus molestie ex. Etiam lorem ligula, placerat et faucibus faucibus, dapibus a magna. In nisl neque, porta quis varius a, auctor at enim. Phasellus vulputate luctus porta. Donec eu libero eu magna faucibus interdum. Etiam sodales, ipsum at egestas condimentum, purus ligula mattis felis, vel commodo magna mi id purus. Proin sagittis orci est, vel fermentum urna porta eu. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas elementum dui velit, non rutrum erat rhoncus vel. Donec dignissim mattis purus id feugiat. Suspendisse ornare felis eget quam lobortis gravida. Cras varius eu eros at venenatis.
+
+Suspendisse in ipsum dapibus, sagittis justo eget, auctor tellus. Nam sed lorem odio. Morbi placerat tortor rhoncus sem interdum ultrices. Donec viverra quam in nisl tincidunt, at molestie dui gravida. Sed ac quam libero. Proin ac dolor in eros posuere sagittis. Donec elementum egestas leo eu aliquet. Aliquam quam quam, fermentum molestie sem a, tincidunt eleifend neque. Suspendisse sagittis convallis malesuada. Vivamus eu convallis tellus. Vestibulum finibus aliquet lorem, nec vestibulum lectus lacinia a. Cras commodo iaculis molestie. Maecenas in interdum erat. Proin ut mauris quis augue consequat venenatis. Morbi scelerisque luctus fringilla. Vivamus aliquet eros quis ante dignissim auctor.
+
+</string>
+</resources>
