@@ -225,6 +225,7 @@ public class RegisterTrailActivity extends AppCompatActivity implements
                 trailToAdd.datetime=datetime.toString();
                 trailToAdd.trailData=routeCoordinates;
                 trailToAdd.weather="Always sunny in philadelphia";
+                trailToAdd.personal=true;
                 Double distance=length(routeCoordinates);
                 int seconds= (int) (timeElapsedVal/1000);
                 float hours = ((float) seconds)/(60*60);

@@ -67,6 +67,9 @@ public class Trail {
     @ColumnInfo(name = "weather")
     public String weather;
 
+    @ColumnInfo(name = "personal")
+    public Boolean personal;
+
     public void setPathid(@NonNull String pathid) {
         this.pathid = pathid;
     }
@@ -188,6 +191,7 @@ public class Trail {
         this.distance=distance;
         this.medianSpeed=medianSpeed;
         this.weather=weather;
+        this.personal=personal;
 
     }
 

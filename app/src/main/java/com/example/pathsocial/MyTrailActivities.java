@@ -101,6 +101,7 @@ public class MyTrailActivities extends AppCompatActivity implements
     private java.util.HashMap<Long,String> trailsDuration=new HashMap<Long,String>();
     private java.util.HashMap<Long,String> trailsDescription=new HashMap<Long,String>();
     private java.util.HashMap<Long,String> trailsWeather=new HashMap<Long,String>();
+    private java.util.HashMap<Long,Boolean> trailsMine=new HashMap<Long,Boolean>();
     private java.util.HashMap<Long,Trail> trailID=new HashMap<Long,Trail>();
     private java.util.HashMap<Long,Symbol> symbolMap=new HashMap<Long,Symbol>();
     public Trail selectedPath;
@@ -447,6 +448,7 @@ public class MyTrailActivities extends AppCompatActivity implements
                             trailsDistance.put(symbol.getId(),trail.distance);
                             trailsDescription.put(symbol.getId(),trail.description);
                             trailsWeather.put(symbol.getId(),trail.weather);
+                            trailsMine.put(symbol.getId(),trail.personal);
                             trailID.put(symbol.getId(),trail);
                             symbolMap.put(symbol.getId(),symbol);
                             routeCoordinates=trail.trailData;
@@ -501,6 +503,14 @@ public class MyTrailActivities extends AppCompatActivity implements
                                             .withDraggable(false));
                                     selectedPath=trailID.get(symbol.getId());
                                     selectedSymbol=symbolMap.get(symbol.getId());
+                                    if (trailsMine.get(symbol.getId())==false)
+                                    {
+                                        btn_publish.setVisibility(View.INVISIBLE);
+                                    }
+                                    else
+                                    {
+                                        btn_publish.setVisibility(View.VISIBLE);
+                                    }
 
                                 }
 

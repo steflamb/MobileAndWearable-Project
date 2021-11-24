@@ -44,6 +44,9 @@
             android:name=".RegisterTrailActivity"
             android:exported="true" />
         <activity
+            android:name=".RegisterTrailActivityFollowed"
+            android:exported="true" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

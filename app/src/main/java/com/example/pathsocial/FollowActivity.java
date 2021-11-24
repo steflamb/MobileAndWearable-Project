@@ -291,19 +291,19 @@ public class FollowActivity extends AppCompatActivity implements
                             PropertyFactory.lineColor(Color.parseColor("#e55e5e"))
                     ));
                 }
-//                Intent intent = new Intent(RecordActivity.this, RegisterTrailActivity.class);
-////                    Log.d("tag",routeCoordinates.toString());
-//                Bundle args = new Bundle();
-//                args.putSerializable("ARRAYLIST",(Serializable)routeCoordinates);
-//                timeWhenStopped = SystemClock.elapsedRealtime() - mChronometer.getBase();
-//                mChronometer.stop();
-//
-//                args.putSerializable("TIME",(Serializable)mChronometer.getText().toString());
-//                args.putSerializable("TIMEVAL",(Serializable)(timeWhenStopped));
-//                args.putSerializable("STARTTIME",(Serializable)LocalDateTime.now());
-//                args.putSerializable("STEPS",(Serializable) recordedSteps);
-//                intent.putExtra("BUNDLE",args);
-//                startActivity(intent);
+                Intent intent = new Intent(FollowActivity.this, RegisterTrailActivityFollowed.class);
+//                    Log.d("tag",routeCoordinates.toString());
+                Bundle args = new Bundle();
+                args.putSerializable("ARRAYLIST",(Serializable)routeCoordinates);
+                timeWhenStopped = SystemClock.elapsedRealtime() - mChronometer.getBase();
+                mChronometer.stop();
+
+                args.putSerializable("TIME",(Serializable)mChronometer.getText().toString());
+                args.putSerializable("TIMEVAL",(Serializable)(timeWhenStopped));
+                args.putSerializable("STARTTIME",(Serializable)LocalDateTime.now());
+                args.putSerializable("STEPS",(Serializable) recordedSteps);
+                intent.putExtra("BUNDLE",args);
+                startActivity(intent);
 
             }
         });
