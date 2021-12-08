@@ -13,10 +13,12 @@ import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.app.PendingIntent;
 import android.app.Notification;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -64,6 +66,7 @@ import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -104,10 +107,20 @@ public class RecordActivity extends AppCompatActivity implements
     private List<Point> routeCoordinates = new ArrayList<>();
     private Boolean exit=false;
     private long timeWhenStopped = 0;
+    private long duration = 0;
     private Chronometer mChronometer;
-    private Button buttonSave,buttonDelete,buttonContinue;
+    private Button buttonSave,buttonDelete,buttonContinue, buttonStatistics;
     private RelativeLayout panelHide;
+    private ConstraintLayout panelStats;
     private Boolean started = false;
+    private Boolean statsPanelShow = false;
+    private TextView statsTextSteps, statsTextCalories, statsTextSpeed;
+    private static final String SHARED_PREFS = "sharedPrefs";
+    private float userWeight, userHeight, hours;
+    private int userAge, genderFac;
+    private double median, caloriesREE, caloriesAEE, caloriesMETs;
+    private int calories, seconds;
+
 
     // Step sensors.
     private SensorManager mSensorManager;
@@ -121,6 +134,41 @@ public class RecordActivity extends AppCompatActivity implements
 
     boolean runningQOrLater =
             android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q;
+
+    private double length(List<Point> coords) {
+        double travelled = 0;
+        Point prevCoords = coords.get(0);
+        Point curCoords;
+        for (int i = 1; i < coords.size(); i++) {
+            curCoords = coords.get(i);
+            travelled +=CalculationByDistance(prevCoords.latitude(), curCoords.latitude(),prevCoords.longitude(), curCoords.longitude());
+            prevCoords = curCoords;
+        }
+        return travelled;
+    }
+
+    public double CalculationByDistance(double lat1,double lat2,double lon1,double lon2) {
+        int Radius = 6371;// radius of earth in Km
+//        double lat1 = StartP.latitude;
+//        double lat2 = EndP.latitude;
+//        double lon1 = StartP.longitude;
+//        double lon2 = EndP.longitude;
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(lat1))
+                * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
+                * Math.sin(dLon / 2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        double valueResult = Radius * c;
+        double km = valueResult / 1;
+        DecimalFormat newFormat = new DecimalFormat("####");
+        int kmInDec = Integer.valueOf(newFormat.format(km));
+        double meter = valueResult % 1000;
+        int meterInDec = Integer.valueOf(newFormat.format(meter));
+
+        return Radius * c;
+    }
 
     private void stopTimer(){
         if(mTimer1 != null){
@@ -163,6 +211,21 @@ public class RecordActivity extends AppCompatActivity implements
                                         PropertyFactory.lineColor(Color.parseColor("#e55e5e"))
                                 ));
 
+                                // update live statistics
+                                duration = SystemClock.elapsedRealtime() - mChronometer.getBase();
+                                seconds= (int) (duration/1000);
+                                hours = ((float) seconds)/(60*60);
+                                median=length(routeCoordinates)/hours;
+
+                                caloriesREE = hours * (((10*userWeight) + (6.25*userHeight) - (5*userAge) + genderFac) / 24);
+                                // calculate MET while ensuring it is between 2-2.5 by interpolating using speed
+                                caloriesMETs = Math.min(2 + ((median / 1.6) / (5 - 2)), 2.5);
+                                caloriesAEE = userWeight * caloriesMETs * hours;
+                                calories = (int) (caloriesREE + caloriesAEE);
+
+                                statsTextSteps.setText(String.valueOf(recordedSteps));
+                                statsTextCalories.setText(String.valueOf(calories));
+                                statsTextSpeed.setText(String.valueOf(Math.round(median * 100.0) / 100.0));
 
                             }
                         }
@@ -190,6 +253,8 @@ public class RecordActivity extends AppCompatActivity implements
         buttonSave.setVisibility(View.VISIBLE);
         buttonDelete.setVisibility(View.VISIBLE);
         buttonContinue.setVisibility(View.VISIBLE);
+        buttonStatistics.setVisibility(View.INVISIBLE);
+        panelStats.setVisibility(View.INVISIBLE);
     }
 
     public void hideFinishPanel()
@@ -198,6 +263,8 @@ public class RecordActivity extends AppCompatActivity implements
         buttonSave.setVisibility(View.INVISIBLE);
         buttonDelete.setVisibility(View.INVISIBLE);
         buttonContinue.setVisibility(View.INVISIBLE);
+        panelStats.setVisibility(View.INVISIBLE);
+        buttonStatistics.setVisibility(View.VISIBLE);
 
     }
 
@@ -255,6 +322,7 @@ public class RecordActivity extends AppCompatActivity implements
         mapView.getMapAsync(this);
         viewBox = findViewById(R.id.view2);
 
+        SharedPreferences sharedPreferences = this.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
 
         buttonStart = findViewById(R.id.toggleStart);
         buttonStop = findViewById(R.id.toggleStop);
@@ -265,13 +333,20 @@ public class RecordActivity extends AppCompatActivity implements
         buttonSave = findViewById(R.id.buttonSaveImage);
         buttonDelete = findViewById(R.id.discardButtonImage);
         buttonContinue = findViewById(R.id.buttonContinueRecordingImage);
+        buttonStatistics = findViewById(R.id.buttonStatistics);
         panelHide = findViewById(R.id.panelHide);
+        panelStats = findViewById(R.id.panelStats);
         hideFinishPanel();
+
+        statsTextSteps=findViewById(R.id.statsViewStepsVal);
+        statsTextCalories=findViewById(R.id.statsViewCaloriesVal);
+        statsTextSpeed=findViewById(R.id.statsViewMedianVal);
 
         buttonStop.setVisibility(View.INVISIBLE);
         buttonPause.setVisibility(View.INVISIBLE);
         buttonStart.setVisibility(View.INVISIBLE);
         viewBox.setVisibility(View.INVISIBLE);
+        panelStats.setVisibility(View.INVISIBLE);
 
         // add objects for step counter
 
@@ -289,11 +364,45 @@ public class RecordActivity extends AppCompatActivity implements
         //Instantiate the StepCounterListener
         stepListener = new StepCounterListener(recordedSteps);
 
+        // get values from shared pref for calorie calc
+        // get user data from shared preferences
+        userWeight = sharedPreferences.getFloat("weight", 0);
+        userHeight = sharedPreferences.getFloat("height", 0);
+        String userGender = String.valueOf(sharedPreferences.getString("genderFull", ""));
+        userAge = sharedPreferences.getInt("age", 0);
+
+        // calculate calories
+        if (userGender.equals(getString(R.string.gender_f))) {
+            genderFac = -161;
+        }
+        else if (userGender.equals(getString(R.string.gender_m))) {
+            genderFac = 5;
+        }
+        else {
+            // take average of M and F factors in case of other gender
+            genderFac = -78;
+        }
+
         buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog diaBox = AskOption();
                 diaBox.show();
+
+            }
+        });
+        buttonStatistics.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // hide / show statistics panel on click
+                if (!statsPanelShow) {
+                    panelStats.setVisibility(View.VISIBLE);
+                    statsPanelShow = true;
+                }
+                else {
+                    panelStats.setVisibility(View.INVISIBLE);
+                    statsPanelShow = false;
+                }
 
             }
         });
