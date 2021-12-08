@@ -116,11 +116,22 @@ public class RegisterMoreDataActivity extends AppCompatActivity {
         String email="error";
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();;
 
-
+        SharedPreferences sharedPreferences = RegisterMoreDataActivity.this.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
 
         if(firebaseUser != null)
         {
+
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+
+
+
+
+
+
+            editor.apply();
             email = firebaseUser.getEmail();
+            editor.putString("email",email);
             textViewMail.setText(String.valueOf(email));
             database.child("users").child(firebaseUser.getUid()).child("full_name").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
@@ -137,6 +148,7 @@ public class RegisterMoreDataActivity extends AppCompatActivity {
                         }
 
                         userimage.setImageBitmap(createImage(200, 200,Color.LTGRAY ,initials));
+                        editor.putString("full_name",name);
 
                     }
                 }
@@ -150,6 +162,7 @@ public class RegisterMoreDataActivity extends AppCompatActivity {
                     else {
                         heightValue=String.valueOf(task.getResult().getValue());
                         textViewHeight.setText(String.valueOf(heightValue));
+                        editor.putFloat("height",Float.valueOf(heightValue));
                     }
                 }
             });
@@ -162,6 +175,7 @@ public class RegisterMoreDataActivity extends AppCompatActivity {
                     else {
                         weightValue=String.valueOf(task.getResult().getValue());
                         textViewWeight.setText(weightValue);
+                        editor.putFloat("weight",Float.valueOf(weightValue));
                     }
                 }
             });
@@ -174,6 +188,7 @@ public class RegisterMoreDataActivity extends AppCompatActivity {
                     else {
                         ageValue=String.valueOf(task.getResult().getValue());
                         textViewAge.setText(ageValue);
+                        editor.putInt("age",Integer.valueOf(ageValue));
                     }
                 }
             });
@@ -186,6 +201,7 @@ public class RegisterMoreDataActivity extends AppCompatActivity {
                     else {
                         genderValue=String.valueOf(task.getResult().getValue());
                         textViewGender.setText(genderValue);
+                        editor.putString("genderFull",genderValue);
                     }
                 }
             });
@@ -195,7 +211,7 @@ public class RegisterMoreDataActivity extends AppCompatActivity {
         }
         else
         {
-            SharedPreferences sharedPreferences = RegisterMoreDataActivity.this.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+
             localEmail = sharedPreferences.getString("email", "");
             name = sharedPreferences.getString("full_name", "");
             weightValue = String.valueOf(sharedPreferences.getFloat("weight", 0));
@@ -216,6 +232,7 @@ public class RegisterMoreDataActivity extends AppCompatActivity {
             userimage.setImageBitmap(createImage(200, 200,Color.LTGRAY ,initials));
 
         }
+
 
 
 
