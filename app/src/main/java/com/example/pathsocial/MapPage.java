@@ -88,6 +88,11 @@ public class MapPage extends AppCompatActivity implements
     private Symbol symbol;
     private Symbol symbol2;
     private String routeCoordinates;
+    private FirebaseUser firebaseUser;
+
+    private boolean owner;
+    private String user_read;
+
 
     private List<Point> routeCoordinatesToFollow = new ArrayList<>();
 
@@ -189,6 +194,8 @@ public class MapPage extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
 
 
 
@@ -246,6 +253,7 @@ public class MapPage extends AppCompatActivity implements
                         clicked=false;
                         symbolManager.delete(symbol2);
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                        owner=false;
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
                     case BottomSheetBehavior.STATE_COLLAPSED:
@@ -323,12 +331,18 @@ public class MapPage extends AppCompatActivity implements
         followButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MapPage.this, FollowActivity.class);
-                Log.d("tag",routeCoordinates.toString());
-                Bundle args = new Bundle();
-                args.putSerializable("ARRAYLIST",(Serializable) routeCoordinates);
-                intent.putExtra("BUNDLE",args);
-                startActivity(intent);
+                if(!owner) {
+                    Intent intent = new Intent(MapPage.this, FollowActivity.class);
+                    Log.d("tag", routeCoordinates.toString());
+                    Bundle args = new Bundle();
+                    args.putSerializable("ARRAYLIST", (Serializable) routeCoordinates);
+                    intent.putExtra("BUNDLE", args);
+                    startActivity(intent);
+                }
+                else
+                {
+//                    delete logic
+                }
             }
         });
 
@@ -486,6 +500,7 @@ public class MapPage extends AppCompatActivity implements
                                     clicked=false;
                                     symbolManager.delete(symbol2);
                                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                                    owner=false;
                                 }
                                 else {
 
@@ -504,7 +519,35 @@ public class MapPage extends AppCompatActivity implements
                                     trailsStepsTxt.setText(String.valueOf(trailsSteps.get(symbol.getId())));
                                     trailsStepsTxt.setText(String.valueOf(trailsSteps.get(symbol.getId())));
                                     trailsMedianSpeedTxt.setText(String.format("%.3f", trailsMedianSpeed.get(symbol.getId()))+" Km/h");
-                                    userNameTxt.setText(usrMap.get(symbol.getId()));
+                                    user_read="";
+                                    database.getReference().child("users").child(usrMap.get(symbol.getId())).child("full_name").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                            if (!task.isSuccessful()) {
+                                                Log.e("firebase", "Error getting data", task.getException());
+                                            }
+                                            else {
+                                                userNameTxt.setText(String.valueOf(task.getResult().getValue()));
+
+                                            }
+                                        }
+                                    });
+                                    user_read=usrMap.get(symbol.getId());
+                                    if(user_read.equals(firebaseUser.getUid()))
+                                    {
+                                        owner=true;
+                                        followButton.setText("Unpublish");
+
+                                    }
+                                    else
+                                    {
+                                        owner=false;
+                                        followButton.setText("Follow trail");
+                                    }
+
+
+
+
                                     FeatureCollection featureCollection = FeatureCollection.fromFeatures(new Feature[] {Feature.fromJson(routeCoordinates)
                                     });
                                     List<Point> pointList = TurfMeta.coordAll(featureCollection, true);
