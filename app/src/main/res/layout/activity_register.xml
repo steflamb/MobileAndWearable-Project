@@ -27,7 +27,7 @@
         android:id="@+id/username"
         android:layout_width="406dp"
         android:layout_height="56dp"
-        android:layout_marginTop="124dp"
+        android:layout_marginTop="30dp"
         android:backgroundTint="@color/white"
         android:hint="@string/register_username_hint"
         android:textColor="#FFFFFF"
@@ -51,20 +51,6 @@
         app:layout_constraintTop_toBottomOf="@+id/username" />
 
     <EditText
-        android:id="@+id/name2"
-        android:layout_width="406dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="4dp"
-        android:backgroundTint="@color/white"
-        android:hint="@string/register_fld_last_name"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.4"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
-
-    <EditText
         android:id="@+id/height"
         android:layout_width="0dp"
         android:layout_height="56dp"
@@ -75,7 +61,7 @@
         android:textColorHint="#FFFFFF"
         app:layout_constraintEnd_toStartOf="@+id/unit1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name2" />
+        app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
 
     <EditText
         android:id="@+id/weight"
@@ -91,16 +77,32 @@
         app:layout_constraintTop_toBottomOf="@+id/height" />
 
     <EditText
+        android:id="@+id/age"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="3dp"
+        android:backgroundTint="@color/white"
+        android:hint="Age"
+        android:inputType="number"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioSex" />
+
+    <EditText
         android:id="@+id/password1"
-        android:layout_width="404dp"
+        android:layout_width="0dp"
         android:layout_height="56dp"
         android:backgroundTint="@color/white"
         android:hint="@string/register_fld_password"
         android:inputType="textPassword"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weight" />
+        app:layout_constraintTop_toBottomOf="@+id/age" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/sign"
@@ -175,5 +177,36 @@
         app:layout_constraintBottom_toBottomOf="@+id/height"
         app:layout_constraintEnd_toStartOf="@+id/switch1"
         app:layout_constraintTop_toTopOf="@+id/height" />
+
+    <RadioGroup
+        android:id="@+id/radioSex"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weight">
+
+        <RadioButton
+            android:id="@+id/radioFemale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Female body type"
+            android:textColor="#FFFFFF"
+            tools:layout_editor_absoluteX="269dp"
+            tools:layout_editor_absoluteY="370dp" />
+
+        <RadioButton
+            android:id="@+id/radioMale"
+            android:layout_width="144dp"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Male body type"
+            android:textColor="#FFFFFF"
+            tools:layout_editor_absoluteX="30dp"
+            tools:layout_editor_absoluteY="370dp" />
+
+    </RadioGroup>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -41,6 +41,7 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
@@ -55,7 +56,7 @@ import java.util.TreeMap;
 
 public class RegisterMoreDataActivity extends AppCompatActivity {
     ImageView userimage;
-    TextView textViewName,textViewHeight,textViewWeight,textViewMail;
+    TextView textViewName,textViewHeight,textViewWeight,textViewMail,textViewAge,textViewGender;
 
 
     private TrailDao trailDao;
@@ -71,6 +72,9 @@ public class RegisterMoreDataActivity extends AppCompatActivity {
     private String nameFull="";
     private String weightValue;
     private String heightValue;
+    private String genderValue;
+    private String ageValue;
+
 
     public Bitmap createImage(int width, int height, int color, String name) {
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -86,6 +90,8 @@ public class RegisterMoreDataActivity extends AppCompatActivity {
         return bitmap;
     }
 
+
+
     String name;
 
     @Override
@@ -97,17 +103,94 @@ public class RegisterMoreDataActivity extends AppCompatActivity {
         textViewHeight=findViewById(R.id.textView7);
         textViewWeight=findViewById(R.id.textView8);
         textViewMail=findViewById(R.id.textView6);
+        textViewGender=findViewById(R.id.textViewG);
+        textViewAge=findViewById(R.id.textViewA);
         userimage.setImageBitmap(createImage(200, 200,Color.LTGRAY ,"AA"));
 
 
 
+        name="aa";
 
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         String email="error";
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();;
 
-        if(firebaseUser != null) {
+
+
+        if(firebaseUser != null)
+        {
             email = firebaseUser.getEmail();
+            textViewMail.setText(String.valueOf(email));
+            database.child("users").child(firebaseUser.getUid()).child("full_name").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    if (!task.isSuccessful()) {
+                        Log.e("firebase", "Error getting data", task.getException());
+                    }
+                    else {
+                        name=String.valueOf(task.getResult().getValue());
+                        textViewName.setText(name);
+                        String initials = "";
+                        for (String s : name.split(" ")) {
+                            initials+=s.charAt(0);
+                        }
+
+                        userimage.setImageBitmap(createImage(200, 200,Color.LTGRAY ,initials));
+
+                    }
+                }
+            });
+            database.child("users").child(firebaseUser.getUid()).child("height").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    if (!task.isSuccessful()) {
+                        Log.e("firebase", "Error getting data", task.getException());
+                    }
+                    else {
+                        heightValue=String.valueOf(task.getResult().getValue());
+                        textViewHeight.setText(String.valueOf(heightValue));
+                    }
+                }
+            });
+            database.child("users").child(firebaseUser.getUid()).child("weight").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    if (!task.isSuccessful()) {
+                        Log.e("firebase", "Error getting data", task.getException());
+                    }
+                    else {
+                        weightValue=String.valueOf(task.getResult().getValue());
+                        textViewWeight.setText(weightValue);
+                    }
+                }
+            });
+            database.child("users").child(firebaseUser.getUid()).child("age").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    if (!task.isSuccessful()) {
+                        Log.e("firebase", "Error getting data", task.getException());
+                    }
+                    else {
+                        ageValue=String.valueOf(task.getResult().getValue());
+                        textViewAge.setText(ageValue);
+                    }
+                }
+            });
+            database.child("users").child(firebaseUser.getUid()).child("gender").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    if (!task.isSuccessful()) {
+                        Log.e("firebase", "Error getting data", task.getException());
+                    }
+                    else {
+                        genderValue=String.valueOf(task.getResult().getValue());
+                        textViewGender.setText(genderValue);
+                    }
+                }
+            });
+
+
 
         }
         else
@@ -117,61 +200,39 @@ public class RegisterMoreDataActivity extends AppCompatActivity {
             name = sharedPreferences.getString("full_name", "");
             weightValue = String.valueOf(sharedPreferences.getFloat("weight", 0));
             heightValue = String.valueOf(sharedPreferences.getFloat("height", 0));
-        }
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-        database.getReference("users").child(firebaseUser.getUid()).child("full_name").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    name=String.valueOf(task.getResult().getValue());
-
-                }
+            genderValue = String.valueOf(sharedPreferences.getString("genderFull", ""));
+            ageValue = String.valueOf(sharedPreferences.getInt("age", 0));
+            textViewHeight.setText(String.valueOf(heightValue));
+            textViewWeight.setText(weightValue);
+            textViewMail.setText(String.valueOf(email));
+            textViewName.setText(name);
+            textViewAge.setText(ageValue);
+            textViewGender.setText(genderValue);
+            String initials = "";
+            for (String s : name.split(" ")) {
+                initials+=s.charAt(0);
             }
-        });
 
+            userimage.setImageBitmap(createImage(200, 200,Color.LTGRAY ,initials));
 
-
-
-        database.getReference("users").child(firebaseUser.getUid()).child("height").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    heightValue=String.valueOf(task.getResult().getValue());
-                }
-            }
-        });
-
-
-
-        database.getReference("users").child(firebaseUser.getUid()).child("weight").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    weightValue=String.valueOf(task.getResult().getValue());
-                }
-            }
-        });
-
-        textViewHeight.setText(String.valueOf(heightValue));
-        textViewWeight.setText(weightValue);
-        textViewMail.setText(String.valueOf(email));
-        textViewName.setText(name);
-        String initials = "";
-        for (String s : name.split(" ")) {
-            initials+=s.charAt(0);
         }
 
-        userimage.setImageBitmap(createImage(200, 200,Color.LTGRAY ,initials));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         // create plots
 

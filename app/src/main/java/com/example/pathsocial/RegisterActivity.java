@@ -7,11 +7,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,7 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends AppCompatActivity {
     Button btn2_signup,btn_lgn;
-    EditText user_name, pass_word,height_txt,weight_txt,name_txt,last_name_txt;;
+    EditText user_name, pass_word,height_txt,weight_txt,name_txt,last_name_txt,age_txt;;
     FirebaseAuth mAuth;
     private DatabaseReference database;
 
@@ -36,6 +39,8 @@ public class RegisterActivity extends AppCompatActivity {
     TextView unit2;
     Boolean changed1;
     Boolean changed2;
+    RadioGroup radioSexGroup;
+    private RadioButton radioSexButton;
 
 
 
@@ -77,11 +82,12 @@ public class RegisterActivity extends AppCompatActivity {
         height_txt=findViewById(R.id.height);
         weight_txt=findViewById(R.id.weight);
         name_txt=findViewById(R.id.nameTextView);
-        last_name_txt=findViewById(R.id.name2);
+        age_txt=findViewById(R.id.age);
         mSwitch2 = findViewById(R.id.switch2);
         mSwitch1 = findViewById(R.id.switch1);
         unit1=findViewById(R.id.unit1);
         unit2=findViewById(R.id.unit2);
+        radioSexGroup=(RadioGroup)findViewById(R.id.radioSex);
         unit2.setText("Lbs");
         unit1.setText("inches");
         changed1=false;
@@ -132,7 +138,10 @@ public class RegisterActivity extends AppCompatActivity {
                 String height=height_txt.getText().toString().trim();
                 String weight=weight_txt.getText().toString().trim();
                 String name=name_txt.getText().toString().trim();
-                String lastname=last_name_txt.getText().toString().trim();
+                int selectedId=radioSexGroup.getCheckedRadioButtonId();
+                radioSexButton=(RadioButton)findViewById(selectedId);
+                String sex=radioSexButton.getText().toString().trim();
+                String age=age_txt.getText().toString().trim();
 
                 if(email.isEmpty())
                 {
@@ -150,12 +159,6 @@ public class RegisterActivity extends AppCompatActivity {
                 {
                     height_txt.setError("Height is empty");
                     height_txt.requestFocus();
-                    return;
-                }
-                if(lastname.isEmpty())
-                {
-                    last_name_txt.setError("Last name is empty");
-                    last_name_txt.requestFocus();
                     return;
                 }
                 if(weight.isEmpty())
@@ -194,6 +197,12 @@ public class RegisterActivity extends AppCompatActivity {
                     height_txt.requestFocus();
                     return;
                 }
+                if(!isNumeric(age))
+                {
+                    age_txt.setError("Check your height!");
+                    age_txt.requestFocus();
+                    return;
+                }
                 mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -209,12 +218,16 @@ public class RegisterActivity extends AppCompatActivity {
                                     DatabaseReference nameRef = database.getReference("users").child(firebaseUser.getUid()).child("full_name");
                                     DatabaseReference heightRef = database.getReference("users").child(firebaseUser.getUid()).child("height");
                                     DatabaseReference weightRef = database.getReference("users").child(firebaseUser.getUid()).child("weight");
+                                    DatabaseReference ageRef = database.getReference("users").child(firebaseUser.getUid()).child("age");
+                                    DatabaseReference genderRef = database.getReference("users").child(firebaseUser.getUid()).child("gender");
 
-                                    nameRef.setValue(String.valueOf(name)+" "+String.valueOf(lastname));
+                                    nameRef.setValue(String.valueOf(name));
 
                                     double weightValue = Double.parseDouble(weight_txt.getText().toString());
                                     double heightValue = Double.parseDouble(height_txt.getText().toString());
-                                    String nameFull=String.valueOf(name)+" "+String.valueOf(lastname);
+                                    int ageValue = Integer.valueOf(age_txt.getText().toString());
+                                    String nameFull=String.valueOf(name);
+                                    String genderFull=radioSexButton.getText().toString().trim();
 
                                     if(!changed1){
                                         heightValue=(heightValue / change1);
@@ -229,6 +242,9 @@ public class RegisterActivity extends AppCompatActivity {
 
                                     heightRef.setValue(String.valueOf(heightValue));
                                     weightRef.setValue(String.valueOf(weightValue));
+                                    ageRef.setValue(String.valueOf(ageValue));
+                                    genderRef.setValue(genderFull);
+
                                     startActivity(new Intent(RegisterActivity.this, MapPage.class));
                                     SharedPreferences sharedPref = RegisterActivity.this.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sharedPref.edit();
@@ -237,6 +253,8 @@ public class RegisterActivity extends AppCompatActivity {
                                     editor.putString("full_name",nameFull);
                                     editor.putFloat("weight",(float) weightValue);
                                     editor.putFloat("height",(float) heightValue);
+                                    editor.putInt("age",(Integer) ageValue);
+                                    editor.putString("genderFull",genderFull);
                                     editor.apply();
                                 }
                                 else

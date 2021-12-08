@@ -9,9 +9,8 @@
     <View
         android:id="@+id/view"
         android:layout_width="419dp"
-        android:layout_height="213dp"
+        android:layout_height="350dp"
         android:background="#52574B"
-        app:layout_constraintBottom_toBottomOf="@+id/textView8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -20,9 +19,9 @@
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="416dp"
-        android:layout_height="223dp"
+        android:layout_height="0dp"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="@+id/textView8"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -117,6 +116,26 @@
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <TextView
+        android:id="@+id/textViewA"
+        android:layout_width="240dp"
+        android:layout_height="29dp"
+        android:text="Age"
+        android:textColor="#FBF9F9"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/textView6"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+    <TextView
+        android:id="@+id/textViewG"
+        android:layout_width="240dp"
+        android:layout_height="29dp"
+        android:text="Gender"
+        android:textColor="#FBF9F9"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/textView6"
+        app:layout_constraintTop_toBottomOf="@+id/textViewA" />
+
+    <TextView
         android:id="@+id/textView10"
         android:layout_width="54dp"
         android:layout_height="27dp"
@@ -126,6 +145,28 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/textView9"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+    <TextView
+        android:id="@+id/textView30"
+        android:layout_width="54dp"
+        android:layout_height="27dp"
+        android:text="Age"
+        android:textColor="#FBF9F9"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/textView9"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+    <TextView
+        android:id="@+id/textView31"
+        android:layout_width="54dp"
+        android:layout_height="27dp"
+        android:text="Gender"
+        android:textColor="#FBF9F9"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/textView9"
+        app:layout_constraintTop_toBottomOf="@+id/textView30" />
 
     <ImageButton
         android:id="@+id/imageButton"
@@ -139,23 +180,13 @@
         app:srcCompat="@drawable/addbtn"
         app:tint="#F1ECEC" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
-        android:layout_width="411dp"
-        android:layout_height="225dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8">
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/toggleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/textView8"
-        app:layout_constraintStart_toStartOf="@+id/textView8">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view">
 
         <Button
             android:id="@+id/stepsButton"
@@ -183,10 +214,11 @@
 
     <FrameLayout
         android:id="@+id/stepFrame"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toggleButton">
 
         <LinearLayout
@@ -308,10 +340,11 @@
 
     <FrameLayout
         android:id="@+id/calFrame"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toggleButton">
 
         <LinearLayout
