@@ -63,6 +63,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
+import java.util.UUID;
 
 import com.mapbox.mapboxsdk.utils.BitmapUtils;
 
@@ -102,8 +103,10 @@ public class MyTrailActivities extends AppCompatActivity implements
     private java.util.HashMap<Long,String> trailsDescription=new HashMap<Long,String>();
     private java.util.HashMap<Long,String> trailsWeather=new HashMap<Long,String>();
     private java.util.HashMap<Long,Boolean> trailsMine=new HashMap<Long,Boolean>();
+    private java.util.HashMap<Long,Boolean> publishedMap=new HashMap<Long,Boolean>();
     private java.util.HashMap<Long,Trail> trailID=new HashMap<Long,Trail>();
     private java.util.HashMap<Long,Symbol> symbolMap=new HashMap<Long,Symbol>();
+
     public Trail selectedPath;
     public TrailForDb selectedPathFirebase;
     public Symbol selectedSymbol;
@@ -114,6 +117,8 @@ public class MyTrailActivities extends AppCompatActivity implements
     private FirebaseDatabase database;
     private GeoFire geoFire;
     private DatabaseReference refPath;
+
+    public Trail trailToAdd = new Trail();
 
 
 
@@ -378,6 +383,21 @@ public class MyTrailActivities extends AppCompatActivity implements
                         geoFire.setLocation(pathId, new GeoLocation(selectedSymbol.getLatLng().getLatitude(),selectedSymbol.getLatLng().getLongitude()));
                         dialog.dismiss();
                         btn_publish.setVisibility(View.INVISIBLE);
+
+                        trailDao.delete(selectedPath);
+                        trailToAdd.pathid=selectedPath.getPathid();
+                        trailToAdd.firstName=selectedPath.getFirstName();
+                        trailToAdd.description=selectedPath.getDescription();
+                        trailToAdd.startingPointLat=selectedPath.getStartingPointLat();
+                        trailToAdd.startingPointLongit=selectedPath.getStartingPointLongit();
+                        trailToAdd.stepsNubers=selectedPath.getStepsNubers();
+                        trailToAdd.duration=selectedPath.getDuration();
+                        trailToAdd.datetime=selectedPath.getDatetime();
+                        trailToAdd.trailData=selectedPath.getTrailData();
+                        trailToAdd.weather=selectedPath.getWeather();
+                        trailToAdd.personal=true;
+                        trailToAdd.published=true;
+                        trailDao.insertAll(trailToAdd);
                     }
 
                 })
@@ -452,6 +472,7 @@ public class MyTrailActivities extends AppCompatActivity implements
                             trailID.put(symbol.getId(),trail);
                             symbolMap.put(symbol.getId(),symbol);
                             routeCoordinates=trail.trailData;
+                            publishedMap.put(symbol.getId(),trail.published);
 
 
                         }
@@ -507,8 +528,11 @@ public class MyTrailActivities extends AppCompatActivity implements
                                     {
                                         btn_publish.setVisibility(View.INVISIBLE);
                                     }
-                                    else
+                                    else if(selectedPath.published)
                                     {
+                                        btn_publish.setVisibility(View.INVISIBLE);
+                                    }
+                                    else {
                                         btn_publish.setVisibility(View.VISIBLE);
                                     }
 

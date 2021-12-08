@@ -70,6 +70,9 @@ public class Trail {
     @ColumnInfo(name = "personal")
     public Boolean personal;
 
+    @ColumnInfo(name = "published")
+    public Boolean published;
+
     public void setPathid(@NonNull String pathid) {
         this.pathid = pathid;
     }
@@ -192,6 +195,7 @@ public class Trail {
         this.medianSpeed=medianSpeed;
         this.weather=weather;
         this.personal=personal;
+        this.published=published;
 
     }
 

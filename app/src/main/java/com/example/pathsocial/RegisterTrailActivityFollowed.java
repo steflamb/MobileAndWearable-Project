@@ -202,6 +202,7 @@ public class RegisterTrailActivityFollowed extends AppCompatActivity implements
                 trailToAdd.trailData=routeCoordinates;
                 trailToAdd.weather="Always sunny in philadelphia";
                 trailToAdd.personal=false;
+                trailToAdd.published=false;
                 Double distance=length(routeCoordinates);
                 int seconds= (int) (timeElapsedVal/1000);
                 float hours = ((float) seconds)/(60*60);
