@@ -22,6 +22,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
@@ -64,6 +66,7 @@ import com.mapbox.mapboxsdk.utils.BitmapUtils;
 import com.mapbox.turf.TurfMeta;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,6 +92,7 @@ public class FollowActivity extends AppCompatActivity implements
     private MapView mapView;
     private MaterialButtonToggleGroup materialButtonToggleGroup;
     private MaterialButton buttonStart,buttonStop,buttonPause;
+    private Button buttonStatistics;
     private SymbolManager symbolManager;
     private Symbol symbol;
     private Button buttonStartRecording;
@@ -98,13 +102,22 @@ public class FollowActivity extends AppCompatActivity implements
     private String routeCoordinatesRecieved;
     private Boolean exit=false;
     private long timeWhenStopped = 0;
+    private long duration = 0;
     private Chronometer mChronometer;
     private Button buttonSave,buttonContinue;
     private RelativeLayout panelHide;
+    private ConstraintLayout panelStats;
     private Boolean started = false;
     private Button buttonCenterCamera;
     private LocationComponent locationComponent;
-    private Button statisticsButton;
+    private Boolean statsPanelShow = false;
+    private TextView statsTextSteps, statsTextCalories, statsTextSpeed;
+    private static final String SHARED_PREFS = "sharedPrefs";
+    private float userWeight, userHeight, hours;
+    private int userAge, genderFac;
+    private double median, caloriesREE, caloriesAEE, caloriesMETs;
+    private int calories, seconds;
+
 
     private Symbol symbol2;
     private Symbol symbol3;
@@ -122,6 +135,41 @@ public class FollowActivity extends AppCompatActivity implements
     private static Timer mTimer1;
     private TimerTask mTt1;
     private Handler mTimerHandler = new Handler();
+
+    private double length(List<Point> coords) {
+        double travelled = 0;
+        Point prevCoords = coords.get(0);
+        Point curCoords;
+        for (int i = 1; i < coords.size(); i++) {
+            curCoords = coords.get(i);
+            travelled +=CalculationByDistance(prevCoords.latitude(), curCoords.latitude(),prevCoords.longitude(), curCoords.longitude());
+            prevCoords = curCoords;
+        }
+        return travelled;
+    }
+
+    public double CalculationByDistance(double lat1,double lat2,double lon1,double lon2) {
+        int Radius = 6371;// radius of earth in Km
+//        double lat1 = StartP.latitude;
+//        double lat2 = EndP.latitude;
+//        double lon1 = StartP.longitude;
+//        double lon2 = EndP.longitude;
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(lat1))
+                * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
+                * Math.sin(dLon / 2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        double valueResult = Radius * c;
+        double km = valueResult / 1;
+        DecimalFormat newFormat = new DecimalFormat("####");
+        int kmInDec = Integer.valueOf(newFormat.format(km));
+        double meter = valueResult % 1000;
+        int meterInDec = Integer.valueOf(newFormat.format(meter));
+
+        return Radius * c;
+    }
 
     private void stopTimer(){
         if(mTimer1 != null){
@@ -164,6 +212,22 @@ public class FollowActivity extends AppCompatActivity implements
                                         PropertyFactory.lineColor(Color.parseColor("#e55e5e"))
                                 ));
 
+                                // update live statistics
+                                duration = SystemClock.elapsedRealtime() - mChronometer.getBase();
+                                seconds= (int) (duration/1000);
+                                hours = ((float) seconds)/(60*60);
+                                median=length(routeCoordinates)/hours;
+                                Log.d("1", String.valueOf(genderFac));
+
+                                caloriesREE = hours * (((10*userWeight) + (6.25*userHeight) - (5*userAge) + genderFac) / 24);
+                                // calculate MET while ensuring it is between 2-2.5 by interpolating using speed
+                                caloriesMETs = Math.min(2 + ((median / 1.6) / (5 - 2)), 2.5);
+                                caloriesAEE = userWeight * caloriesMETs * hours;
+                                calories = (int) (caloriesREE + caloriesAEE);
+
+                                statsTextSteps.setText(String.valueOf(recordedSteps));
+                                statsTextCalories.setText(String.valueOf(calories));
+                                statsTextSpeed.setText(String.valueOf(Math.round(median * 100.0) / 100.0));
 
                             }
                         }
@@ -190,6 +254,8 @@ public class FollowActivity extends AppCompatActivity implements
         panelHide.setVisibility(View.VISIBLE);
         buttonSave.setVisibility(View.VISIBLE);
         buttonContinue.setVisibility(View.VISIBLE);
+        buttonStatistics.setVisibility(View.INVISIBLE);
+        panelStats.setVisibility(View.INVISIBLE);
     }
 
     public void hideFinishPanel()
@@ -197,6 +263,8 @@ public class FollowActivity extends AppCompatActivity implements
         panelHide.setVisibility(View.INVISIBLE);
         buttonSave.setVisibility(View.INVISIBLE);
         buttonContinue.setVisibility(View.INVISIBLE);
+        panelStats.setVisibility(View.INVISIBLE);
+        buttonStatistics.setVisibility(View.VISIBLE);
 
     }
 
@@ -233,11 +301,18 @@ public class FollowActivity extends AppCompatActivity implements
         buttonCenterCamera = findViewById(R.id.centerBtn);
         buttonStartRecording = findViewById(R.id.buttonStartRecording);
         mChronometer = (Chronometer) findViewById(R.id.mChronometer);
-        statisticsButton = findViewById(R.id.buttonStatistics);
+        buttonStatistics = findViewById(R.id.buttonStatisticsFollow);
+
+        SharedPreferences sharedPreferences = this.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+
+        statsTextSteps=findViewById(R.id.statsViewStepsValFollow);
+        statsTextCalories=findViewById(R.id.statsViewCaloriesValFollow);
+        statsTextSpeed=findViewById(R.id.statsViewMedianValFollow);
 
         buttonSave = findViewById(R.id.buttonSaveImage);
         buttonContinue = findViewById(R.id.buttonContinueRecordingImage);
         panelHide = findViewById(R.id.panelHide);
+        panelStats = findViewById(R.id.panelStatsFollow);
         hideFinishPanel();
         Intent intent = getIntent();
         Bundle args = intent.getBundleExtra("BUNDLE");
@@ -253,12 +328,48 @@ public class FollowActivity extends AppCompatActivity implements
         buttonStop.setVisibility(View.INVISIBLE);
         buttonPause.setVisibility(View.INVISIBLE);
         buttonStart.setVisibility(View.INVISIBLE);
-        statisticsButton.setVisibility(View.INVISIBLE);
+        buttonStatistics.setVisibility(View.INVISIBLE);
+        panelStats.setVisibility(View.INVISIBLE);
+
+        // get values from shared pref for calorie calc
+        // get user data from shared preferences
+        userWeight = sharedPreferences.getFloat("weight", 0);
+        userHeight = sharedPreferences.getFloat("height", 0);
+        String userGender = String.valueOf(sharedPreferences.getString("genderFull", ""));
+        userAge = sharedPreferences.getInt("age", 0);
+
+        // calculate calories
+        if (userGender.equals(getString(R.string.gender_f))) {
+            genderFac = -161;
+        }
+        else if (userGender.equals(getString(R.string.gender_m))) {
+            genderFac = 5;
+        }
+        else {
+            // take average of M and F factors in case of other gender
+            genderFac = -78;
+        }
 
         buttonContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 hideFinishPanel();
+            }
+        });
+
+        buttonStatistics.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // hide / show statistics panel on click
+                if (!statsPanelShow) {
+                    panelStats.setVisibility(View.VISIBLE);
+                    statsPanelShow = true;
+                }
+                else {
+                    panelStats.setVisibility(View.INVISIBLE);
+                    statsPanelShow = false;
+                }
+
             }
         });
 
@@ -374,7 +485,7 @@ public class FollowActivity extends AppCompatActivity implements
                 double douTilt=tilt.doubleValue();
 
                 locationComponent.setCameraMode(CameraMode.TRACKING_COMPASS,lonTransitionTime,douZoom,null,douTilt,null);
-                statisticsButton.setVisibility(View.VISIBLE);
+                buttonStatistics.setVisibility(View.VISIBLE);
 
             }
         });

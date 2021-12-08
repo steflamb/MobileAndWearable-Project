@@ -9,7 +9,7 @@
 
 
     <Button
-        android:id="@+id/buttonStatistics"
+        android:id="@+id/buttonStatisticsFollow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/follow_show_statistics"
@@ -36,6 +36,94 @@
             tools:ignore="SpeakableTextPresentCheck" />
 
     </com.mapbox.mapboxsdk.maps.MapView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/panelStatsFollow"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#040202"
+        android:backgroundTint="#DD151414"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonStatisticsFollow">
+
+        <TextView
+            android:id="@+id/statsViewStepsFollow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/trailinfo_fld_steps"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/statsViewCaloriesFollow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/statsViewStepsFollow"
+            android:layout_marginTop="10dp"
+            android:text="@string/trailinfo_fld_cal"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/statsViewStepsValFollow" />
+
+        <TextView
+            android:id="@+id/statsViewMedianFollow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/statsViewCaloriesFollow"
+            android:layout_marginTop="10dp"
+            android:text="@string/trailinfo_fld_speed"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/statsViewCaloriesValFollow" />
+
+        <TextView
+            android:id="@+id/statsViewStepsValFollow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trailinfo_fld_steps_val"
+            android:textColor="#FFFFFF"
+            android:textSize="48sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/statsViewStepsFollow" />
+
+        <TextView
+            android:id="@+id/statsViewCaloriesValFollow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/statsViewStepsFollow"
+            android:text="@string/trailinfo_fld_cal_val"
+            android:textColor="#FFFFFF"
+            android:textSize="48sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/statsViewCaloriesFollow" />
+
+        <TextView
+            android:id="@+id/statsViewMedianValFollow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/statsViewCaloriesFollow"
+            android:text="@string/trailinfo_fld_speed_val"
+            android:textColor="#FFFFFF"
+            android:textSize="48sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/statsViewMedianFollow" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
         android:id="@+id/view2"
