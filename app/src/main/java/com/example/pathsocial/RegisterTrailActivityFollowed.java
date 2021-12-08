@@ -5,6 +5,7 @@ import static com.mapbox.mapboxsdk.style.layers.Property.ICON_ROTATION_ALIGNMENT
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.content.SharedPreferences;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -82,6 +84,7 @@ public class RegisterTrailActivityFollowed extends AppCompatActivity implements
     public EditText editName;
     public EditText editDescription;
     private String timeElapsed;
+    private static final String SHARED_PREFS = "sharedPrefs";
     private int steps;
     Boolean exit=false;
 
@@ -165,6 +168,7 @@ public class RegisterTrailActivityFollowed extends AppCompatActivity implements
         mapView.getMapAsync(this);
         editName= findViewById(R.id.editTextTrailName);
         editDescription= findViewById(R.id.editTextDescription);
+        SharedPreferences sharedPreferences = this.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
 
         db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "database-trails").allowMainThreadQueries().build();
@@ -219,17 +223,18 @@ public class RegisterTrailActivityFollowed extends AppCompatActivity implements
                     trailToAdd.medianSpeed=median;
                 }
 
+                // get user data from shared preferences
+                float userWeight = sharedPreferences.getFloat("weight", 0);
+                float userHeight = sharedPreferences.getFloat("height", 0);
+                String userGender = String.valueOf(sharedPreferences.getString("genderFull", ""));
+                int userAge = sharedPreferences.getInt("age", 0);
+
                 // calculate calories
-                // TODO: Remove the static values and use actual user info for calculation
-                String userGender = "M";
                 int genderFac;
-                int userAge = 25;
-                int userWeight = 70;
-                int userHeight = 170;
-                if (userGender.equals("F")) {
+                if (userGender.equals(getString(R.string.gender_f))) {
                     genderFac = -161;
                 }
-                else if (userGender.equals("M")) {
+                else if (userGender.equals(getString(R.string.gender_m))) {
                     genderFac = 5;
                 }
                 else {

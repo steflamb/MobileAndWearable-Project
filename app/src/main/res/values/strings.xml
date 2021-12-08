@@ -97,4 +97,6 @@ Suspendisse in ipsum dapibus, sagittis justo eget, auctor tellus. Nam sed lorem 
     <string name="trailinfo_fld_cal_expected">Expected calories</string>
     <string name="trailinfo_fld_user">User</string>
     <string name="trailinfo_fld_user_val">TextView</string>
+    <string name="gender_f">Female body type</string>
+    <string name="gender_m">Male body type</string>
 </resources>

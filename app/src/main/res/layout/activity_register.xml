@@ -190,7 +190,7 @@
             android:id="@+id/radioFemale"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Female body type"
+            android:text="@string/gender_f"
             android:textColor="#FFFFFF"
             tools:layout_editor_absoluteX="269dp"
             tools:layout_editor_absoluteY="370dp" />
@@ -200,7 +200,7 @@
             android:layout_width="144dp"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Male body type"
+            android:text="@string/gender_m"
             android:textColor="#FFFFFF"
             tools:layout_editor_absoluteX="30dp"
             tools:layout_editor_absoluteY="370dp" />

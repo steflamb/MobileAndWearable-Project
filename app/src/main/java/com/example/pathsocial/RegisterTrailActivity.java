@@ -12,6 +12,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -111,6 +112,7 @@ public class RegisterTrailActivity extends AppCompatActivity implements
     public EditText editDescription;
     private String timeElapsed;
     private int steps;
+    private static final String SHARED_PREFS = "sharedPrefs";
     Boolean exit=false;
 
     private double length(List<Point> coords) {
@@ -193,6 +195,7 @@ public class RegisterTrailActivity extends AppCompatActivity implements
         mapView.getMapAsync(this);
         editName= findViewById(R.id.editTextTrailName);
         editDescription= findViewById(R.id.editTextDescription);
+        SharedPreferences sharedPreferences = this.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
 
         db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "database-trails").allowMainThreadQueries().build();
@@ -247,17 +250,18 @@ public class RegisterTrailActivity extends AppCompatActivity implements
                     trailToAdd.medianSpeed=median;
                 }
 
+                // get user data from shared preferences
+                float userWeight = sharedPreferences.getFloat("weight", 0);
+                float userHeight = sharedPreferences.getFloat("height", 0);
+                String userGender = String.valueOf(sharedPreferences.getString("genderFull", ""));
+                int userAge = sharedPreferences.getInt("age", 0);
+
                 // calculate calories
-                // TODO: Remove the static values and use actual user info for calculation
-                String userGender = "M";
                 int genderFac;
-                int userAge = 25;
-                int userWeight = 70;
-                int userHeight = 170;
-                if (userGender.equals("F")) {
+                if (userGender.equals(getString(R.string.gender_f))) {
                     genderFac = -161;
                 }
-                else if (userGender.equals("M")) {
+                else if (userGender.equals(getString(R.string.gender_m))) {
                     genderFac = 5;
                 }
                 else {
