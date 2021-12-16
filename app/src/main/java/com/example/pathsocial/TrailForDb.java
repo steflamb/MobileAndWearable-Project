@@ -28,6 +28,8 @@ public class TrailForDb {
     public Double medianSpeed;
     public String weather;
     public String trailData;
+    public Integer reviewPositive;
+    public Integer reviewNegative;
 
     public void setUsrId(String usrId){this.usrId= usrId; }
 
@@ -139,8 +141,26 @@ public class TrailForDb {
         return usrId;
     }
 
+    public Integer getReviewNegative() {
+        return reviewNegative;
+    }
 
-    public TrailForDb(String pathid, String firstName, String description, String duration, String datetime, double startingPointLat, double startingPointLongit, String trailData, Integer stepsNubers, Integer calories, Double distance, Double medianSpeed, String weather, String usrId)
+    public Integer getReviewPositive()
+    {
+        return reviewPositive;
+    }
+
+    public void setReviewPositive(Integer reviewPositive)
+    {
+        this.reviewPositive=reviewPositive;
+    }
+
+    public void setReviewNegative(Integer reviewNegative)
+    {
+        this.reviewNegative=reviewNegative;
+    }
+
+    public TrailForDb(String pathid, String firstName, String description, String duration, String datetime, double startingPointLat, double startingPointLongit, String trailData, Integer stepsNubers, Integer calories, Double distance, Double medianSpeed, String weather, String usrId,Integer reviewPositive,Integer reviewNegative)
     {
         this.pathid=pathid;
         this.firstName=firstName;
@@ -156,6 +176,8 @@ public class TrailForDb {
         this.medianSpeed=medianSpeed;
         this.weather=weather;
         this.usrId=usrId;
+        this.reviewPositive=reviewPositive;
+        this.reviewNegative=reviewNegative;
 
     }
 

@@ -82,7 +82,8 @@ public class MapPage extends AppCompatActivity implements
     private GeoFire geoFire;
     private DatabaseReference refPath;
     private DatabaseReference refLocation;
-    private List<TrailForDb> trailsFromDb= new ArrayList<>();;
+    private List<TrailForDb> trailsFromDb= new ArrayList<>();
+    private java.util.HashMap<String,String> refMap=new HashMap<String,String>();
 
     private SymbolManager symbolManager;
     private Symbol symbol;
@@ -111,6 +112,9 @@ public class MapPage extends AppCompatActivity implements
     private java.util.HashMap<Long,TrailForDb> trailID=new HashMap<Long,TrailForDb>();
     private java.util.HashMap<Long,Symbol> symbolMap=new HashMap<Long,Symbol>();
     private java.util.HashMap<Long,String> usrMap=new HashMap<Long,String>();
+    private java.util.HashMap<Long,String> idMap=new HashMap<Long,String>();
+    private java.util.HashMap<Long,Integer> likeCounter=new HashMap<Long,Integer>();
+    private java.util.HashMap<Long,Integer> dislikeCounter=new HashMap<Long,Integer>();
 
 
     private Boolean clicked=false;
@@ -118,6 +122,8 @@ public class MapPage extends AppCompatActivity implements
     public Symbol selectedSymbol;
 
     public TrailForDb selectedPath;
+
+    public String selectedId;
 
 
     List<Symbol> symbols = new ArrayList<>();
@@ -130,7 +136,7 @@ public class MapPage extends AppCompatActivity implements
 
 
     BottomSheetBehavior bottomSheetBehavior;
-    TextView trailsNameTxt,trailsStepsTxt,trailsCaloriesTxt,userNameTxt,trailsDistanceTxt,trailsMedianSpeedTxt,trailsDateTxt,trailsDurationTxt,trailsDescriptionTxt,trailsWeatherTxt;
+    TextView trailsNameTxt,trailsStepsTxt,trailsCaloriesTxt,userNameTxt,trailsDistanceTxt,trailsMedianSpeedTxt,trailsDateTxt,trailsDurationTxt,trailsDescriptionTxt,trailsWeatherTxt,likeTxt,dislikeTxt;
 
 
     private Menu menu;
@@ -242,6 +248,8 @@ public class MapPage extends AppCompatActivity implements
         trailsDescriptionTxt= findViewById(R.id.textViewDesc);
         trailsWeatherTxt= findViewById(R.id.textViewWeather);
         userNameTxt= findViewById(R.id.textViewUser);
+        likeTxt= findViewById(R.id.likeCount);
+        dislikeTxt= findViewById(R.id.dislikeCount);
 
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override public void onStateChanged(@NonNull View bottomSheet, int newState) {
@@ -336,12 +344,15 @@ public class MapPage extends AppCompatActivity implements
                     Log.d("tag", routeCoordinates.toString());
                     Bundle args = new Bundle();
                     args.putSerializable("ARRAYLIST", (Serializable) routeCoordinates);
+                    args.putSerializable("REF", (Serializable) selectedId);
                     intent.putExtra("BUNDLE", args);
                     startActivity(intent);
                 }
                 else
                 {
-//                    delete logic
+                    Log.d("lolol",selectedId);
+                    refPath.child(selectedId).removeValue();
+                    refLocation.child(selectedId).removeValue();
                 }
             }
         });
@@ -361,7 +372,6 @@ public class MapPage extends AppCompatActivity implements
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                //Get map of users in datasnapshot
                                 Map<String,Object> data = (Map<String,Object>) dataSnapshot.getValue();
                                 String pathid=(String) data.get("pathid");
                                 String firstName=(String) data.get("firstName");
@@ -377,10 +387,13 @@ public class MapPage extends AppCompatActivity implements
                                 String weather=(String) data.get("weather");
                                 String trailData=(String) data.get("trailData");
                                 String usrId=(String) data.get("usrId");
+                                Integer reviewPositive=Integer.valueOf(((Long) data.get("reviewPositive")).intValue());
+                                Integer reviewNegative=Integer.valueOf(((Long) data.get("reviewNegative")).intValue());
+                                refMap.put(pathid,key);
 
 
 
-                                TrailForDb newTrail=new TrailForDb(pathid,firstName,description,duration,datetime,startingPointLat,startingPointLongit,trailData,(int)stepsNubers.intValue(),(int)calories.intValue(),distance.doubleValue(),medianSpeed.doubleValue(),weather,usrId);
+                                TrailForDb newTrail=new TrailForDb(pathid,firstName,description,duration,datetime,startingPointLat,startingPointLongit,trailData,(int)stepsNubers.intValue(),(int)calories.intValue(),distance.doubleValue(),medianSpeed.doubleValue(),weather,usrId,reviewPositive,reviewNegative);
                                 trailsFromDb.add(newTrail);
                                 symbolManager.delete(symbols);
                                 trailsMap=new HashMap<Long,String>();
@@ -396,6 +409,9 @@ public class MapPage extends AppCompatActivity implements
                                 trailID=new HashMap<Long,TrailForDb>();
                                 symbolMap=new HashMap<Long,Symbol>();
                                 usrMap=new HashMap<Long,String>();
+                                idMap=new HashMap<Long,String>();
+                                likeCounter=new HashMap<Long,Integer>();
+                                dislikeCounter=new HashMap<Long,Integer>();
                                 for(TrailForDb trail : trailsFromDb)
                                 {
                                     symbol = symbolManager.create(new SymbolOptions()
@@ -415,9 +431,13 @@ public class MapPage extends AppCompatActivity implements
                                     trailsWeather.put(symbol.getId(),trail.weather);
                                     trailID.put(symbol.getId(),trail);
                                     symbolMap.put(symbol.getId(),symbol);
+                                    idMap.put(symbol.getId(),refMap.get(trail.pathid));
                                     usrMap.put(symbol.getId(),trail.usrId);
                                     symbols.add(symbol);
                                     routeCoordinates=trail.trailData;
+                                    likeCounter.put(symbol.getId(),trail.reviewPositive);
+                                    dislikeCounter.put(symbol.getId(),trail.reviewNegative);
+
 
 
                                 }
@@ -519,6 +539,9 @@ public class MapPage extends AppCompatActivity implements
                                     trailsStepsTxt.setText(String.valueOf(trailsSteps.get(symbol.getId())));
                                     trailsStepsTxt.setText(String.valueOf(trailsSteps.get(symbol.getId())));
                                     trailsMedianSpeedTxt.setText(String.format("%.3f", trailsMedianSpeed.get(symbol.getId()))+" Km/h");
+                                    likeTxt.setText(String.valueOf(likeCounter.get(symbol.getId())));
+                                    dislikeTxt.setText(String.valueOf(dislikeCounter.get(symbol.getId())));
+                                    selectedId=idMap.get(symbol.getId());
                                     user_read="";
                                     database.getReference().child("users").child(usrMap.get(symbol.getId())).child("full_name").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                         @Override

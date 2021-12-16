@@ -23,6 +23,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
 import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.Feature;
@@ -48,7 +51,9 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.UUID;
 
@@ -75,6 +80,14 @@ public class RegisterTrailActivityFollowed extends AppCompatActivity implements
     private Symbol symbol;
     private Button buttonSave;
     private Button buttonDelete;
+    private Button buttonLike;
+    private Button buttonDislike;
+    private Boolean liked;
+    private Boolean disliked;
+
+    private DatabaseReference refPath;
+
+
     private static final String MAKI_ICON_MARKER = "marker-15";
     private View viewBox;
     private ArrayList<Point> routeCoordinates = new ArrayList<>();
@@ -86,6 +99,10 @@ public class RegisterTrailActivityFollowed extends AppCompatActivity implements
     private String timeElapsed;
     private static final String SHARED_PREFS = "sharedPrefs";
     private int steps;
+
+
+    private String TrailId;
+
     Boolean exit=false;
 
     private double length(List<Point> coords) {
@@ -158,12 +175,18 @@ public class RegisterTrailActivityFollowed extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Mapbox.getInstance(this, "pk.eyJ1Ijoic3RlZmxhbWIiLCJhIjoiY2t0MWNkeXg0MGR6bzJvbzMwd2o2N2xvaSJ9.xzks_fIbucKQlpZlKSvTfA");
-        setContentView(R.layout.activity_register_trail);
+        setContentView(R.layout.activity_register_trail_followed);
         locman = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         mapView = findViewById(R.id.mapViewRecord);
         buttonSave = findViewById(R.id.buttonPosition);
         buttonDelete = findViewById(R.id.discardButton);
+        liked=false;
+        disliked=false;
+
+        buttonLike = findViewById(R.id.buttonLike);
+        buttonDislike = findViewById(R.id.buttonDislike);
+
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
         editName= findViewById(R.id.editTextTrailName);
@@ -183,6 +206,7 @@ public class RegisterTrailActivityFollowed extends AppCompatActivity implements
         long timeElapsedVal = (long) args.getSerializable("TIMEVAL");
         LocalDateTime datetime = (LocalDateTime) args.getSerializable("STARTTIME");
         steps = (int) args.getSerializable("STEPS");
+        TrailId = (String) args.getSerializable("REF");
         Log.d("tag",routeCoordinates.toString());
 
         buttonSave.setOnClickListener(new View.OnClickListener() {
@@ -254,7 +278,16 @@ public class RegisterTrailActivityFollowed extends AppCompatActivity implements
                 Log.d("time:",String.valueOf(seconds));
                 Log.d("time:",String.valueOf(hours));
 
-
+                if(liked)
+                {
+                    refPath = FirebaseDatabase.getInstance().getReference("trails").child("path").child(TrailId).child("reviewPositive");
+                    refPath.setValue(ServerValue.increment(1));
+                }
+                else if(disliked)
+                {
+                    refPath = FirebaseDatabase.getInstance().getReference("trails").child("path").child(TrailId).child("reviewNegative");
+                    refPath.setValue(ServerValue.increment(1));
+                }
 
 
 
@@ -270,6 +303,47 @@ public class RegisterTrailActivityFollowed extends AppCompatActivity implements
             public void onClick(View view) {
                 AlertDialog diaBox = AskOption();
                 diaBox.show();
+
+            }
+        });
+
+
+        buttonLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(liked)
+                {
+                    buttonLike.setBackgroundColor(0xFFA2A69E);
+                    liked=Boolean.FALSE;
+                }
+                else
+                {
+                    buttonLike.setBackgroundColor(0xFF85C351);
+                    buttonDislike.setBackgroundColor(0xFFA2A69E);
+                    liked=Boolean.TRUE;
+                    disliked=Boolean.FALSE;
+                }
+
+
+            }
+        });
+
+
+        buttonDislike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(disliked)
+                {
+                    buttonDislike.setBackgroundColor(0xFFA2A69E);
+                    disliked=Boolean.FALSE;
+                }
+                else
+                {
+                    buttonDislike.setBackgroundColor(0xFFFF3D00);
+                    buttonLike.setBackgroundColor(0xFFA2A69E);
+                    disliked=Boolean.TRUE;
+                    liked=Boolean.FALSE;
+                }
 
             }
         });

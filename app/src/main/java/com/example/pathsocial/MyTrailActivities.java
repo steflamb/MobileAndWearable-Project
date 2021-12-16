@@ -368,16 +368,16 @@ public class MyTrailActivities extends AppCompatActivity implements
                         selectedPathFirebase = new TrailForDb(selectedPath.getPathid(),
                                                                 selectedPath.getFirstName(),
                                                                 selectedPath.getDescription(),
-                                                                selectedPath.getDuration(),
+                                                                selectedPath.getDuration()+0.01,
                                                                 selectedPath.getDatetime(),
                                                                 selectedPath.getStartingPointLat(),
                                                                 selectedPath.getStartingPointLongit(),
                                                                 geoJson,
                                                                 selectedPath.getStepsNubers(),
                                                                 selectedPath.getCalories(),
-                                                                selectedPath.getDistance(),
-                                                                selectedPath.getMedianSpeed(),
-                                                                selectedPath.getWeather(),usrId);
+                                                                selectedPath.getDistance()+0.01,
+                                                                selectedPath.getMedianSpeed()+0.01,
+                                                                selectedPath.getWeather(),usrId,0,0);
 
                         refPath.child(pathId).setValue(selectedPathFirebase);
                         geoFire.setLocation(pathId, new GeoLocation(selectedSymbol.getLatLng().getLatitude(),selectedSymbol.getLatLng().getLongitude()));

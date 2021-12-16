@@ -122,6 +122,8 @@ public class FollowActivity extends AppCompatActivity implements
     private Symbol symbol2;
     private Symbol symbol3;
 
+    private String TrailId;
+
     private int steps;
 
     // Step sensors.
@@ -317,6 +319,7 @@ public class FollowActivity extends AppCompatActivity implements
         Intent intent = getIntent();
         Bundle args = intent.getBundleExtra("BUNDLE");
         routeCoordinatesRecieved = (String) args.getSerializable("ARRAYLIST");
+        TrailId = (String) args.getSerializable("REF");
 
         // Ask for activity recognition permission
         if (runningQOrLater) {
@@ -413,6 +416,7 @@ public class FollowActivity extends AppCompatActivity implements
                 args.putSerializable("TIMEVAL",(Serializable)(timeWhenStopped));
                 args.putSerializable("STARTTIME",(Serializable)LocalDateTime.now());
                 args.putSerializable("STEPS",(Serializable) recordedSteps);
+                args.putSerializable("REF",(Serializable) TrailId);
                 intent.putExtra("BUNDLE",args);
                 startActivity(intent);
 
