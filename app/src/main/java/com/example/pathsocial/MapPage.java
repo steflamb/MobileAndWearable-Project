@@ -93,7 +93,9 @@ public class MapPage extends AppCompatActivity implements
 
     private boolean owner;
     private String user_read;
-
+    private String user_id;
+    private ArrayList<String> user_paths;;
+    private String user_name;
 
     private List<Point> routeCoordinatesToFollow = new ArrayList<>();
 
@@ -550,11 +552,44 @@ public class MapPage extends AppCompatActivity implements
                                                 Log.e("firebase", "Error getting data", task.getException());
                                             }
                                             else {
-                                                userNameTxt.setText(String.valueOf(task.getResult().getValue()));
+                                                user_name = String.valueOf(task.getResult().getValue());
+                                                userNameTxt.setText(user_name);
 
                                             }
                                         }
                                     });
+
+                                    user_paths = new ArrayList<String>();;
+                                    // get all the trails for this user
+                                    user_id = usrMap.get(symbol.getId());
+                                    database.getReference().child("trails").child("path").addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            for (DataSnapshot item_snapshot:dataSnapshot.getChildren()) {
+                                                if (item_snapshot.child("usrId").getValue().toString().equals(user_id)) {
+                                                    user_paths.add(item_snapshot.child("firstName").getValue().toString());
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+                                        }
+                                    });
+
+
+                                    userNameTxt.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            // open the new view to show the list of paths created by this user
+                                            Intent intent = new Intent(MapPage.this, UserPathsActivity.class);
+                                            intent.putExtra("paths", user_paths);
+                                            intent.putExtra("user_name", user_name);
+                                            startActivity(intent);
+
+                                        }
+                                    });
+
                                     user_read=usrMap.get(symbol.getId());
                                     if(user_read.equals(firebaseUser.getUid()))
                                     {

@@ -99,4 +99,6 @@ Suspendisse in ipsum dapibus, sagittis justo eget, auctor tellus. Nam sed lorem 
     <string name="trailinfo_fld_user_val">TextView</string>
     <string name="gender_f">Female body type</string>
     <string name="gender_m">Male body type</string>
+    <string name="user_paths">Created by </string>
+    <string name="user_paths_map_btn">Map View</string>
 </resources>
