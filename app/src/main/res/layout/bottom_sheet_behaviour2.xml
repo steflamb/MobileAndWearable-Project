@@ -8,6 +8,7 @@
     android:background="@color/black"
     android:backgroundTint="#7C7C7C"
     android:orientation="vertical"
+    android:clickable="true"
     app:behavior_hideable="true"
     app:behavior_peekHeight="100dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
