@@ -219,7 +219,6 @@ public class FollowActivity extends AppCompatActivity implements
                                 seconds= (int) (duration/1000);
                                 hours = ((float) seconds)/(60*60);
                                 median=length(routeCoordinates)/hours;
-                                Log.d("1", String.valueOf(genderFac));
 
                                 caloriesREE = hours * (((10*userWeight) + (6.25*userHeight) - (5*userAge) + genderFac) / 24);
                                 // calculate MET while ensuring it is between 2-2.5 by interpolating using speed
@@ -325,6 +324,15 @@ public class FollowActivity extends AppCompatActivity implements
         if (runningQOrLater) {
             getActivity();
         }
+
+        //  Get an instance of the sensor manager.
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+        // Step detector instance
+        mSensorStepDetector = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+
+        //Instantiate the StepCounterListener
+        stepListener = new StepCounterListener(recordedSteps);
 
 
         viewBox.setVisibility(View.INVISIBLE);
@@ -437,6 +445,9 @@ public class FollowActivity extends AppCompatActivity implements
                     mChronometer.start();
                     startTimer();
 
+                    // Register the step counter listener
+                    mSensorManager.registerListener(stepListener, mSensorStepDetector, SensorManager.SENSOR_DELAY_NORMAL);
+
 
                 } else if (group.getCheckedButtonId() == R.id.toggleStop) {
                     buttonStart.setVisibility(View.VISIBLE);
@@ -446,6 +457,9 @@ public class FollowActivity extends AppCompatActivity implements
                     timeWhenStopped = mChronometer.getBase() - SystemClock.elapsedRealtime();
                     mChronometer.stop();
                     stopTimer();
+
+                    // Unregister the listener
+                    mSensorManager.unregisterListener(stepListener);
                     showFinishPanel();
 
 
@@ -460,6 +474,9 @@ public class FollowActivity extends AppCompatActivity implements
                     buttonPause.setText("PAUSED");
                     timeWhenStopped = mChronometer.getBase() - SystemClock.elapsedRealtime();
                     mChronometer.stop();
+
+                    // Unregister the listener
+                    mSensorManager.unregisterListener(stepListener);
                     stopTimer();
 
                 }
