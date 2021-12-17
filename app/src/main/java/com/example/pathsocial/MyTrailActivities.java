@@ -395,6 +395,9 @@ public class MyTrailActivities extends AppCompatActivity implements
                         trailToAdd.datetime=selectedPath.getDatetime();
                         trailToAdd.trailData=selectedPath.getTrailData();
                         trailToAdd.weather=selectedPath.getWeather();
+                        trailToAdd.calories=selectedPath.getCalories();
+                        trailToAdd.medianSpeed=selectedPath.getMedianSpeed();
+                        trailToAdd.distance=selectedPath.getDistance();
                         trailToAdd.personal=true;
                         trailToAdd.published=true;
                         trailDao.insertAll(trailToAdd);
