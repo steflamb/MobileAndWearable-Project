@@ -17,40 +17,52 @@
         android:theme="@style/Theme.PathSocial">
         <activity
             android:name=".FollowActivity"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".LeagueActivity"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".MyTrailActivities"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:windowActionBar="false" />
         <activity
             android:name=".RecordActivity"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".RegisterMoreDataActivity"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".RegisterActivity"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".LoginActivity"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".MapPage"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".RegisterTrailActivity"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".RegisterTrailActivityFollowed"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".UserPathsActivity"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
