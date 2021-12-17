@@ -9,7 +9,7 @@
     <View
         android:id="@+id/view"
         android:layout_width="419dp"
-        android:layout_height="350dp"
+        android:layout_height="300dp"
         android:background="#52574B"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,7 +21,6 @@
         android:layout_width="416dp"
         android:layout_height="0dp"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -223,7 +222,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
@@ -349,7 +348,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
