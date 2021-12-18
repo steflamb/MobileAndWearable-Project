@@ -51,6 +51,7 @@ public class UserPathsActivity extends AppCompatActivity {
                 mapViewIntent.putExtra("user_name", user_name);
                 mapViewIntent.putExtra("path_keys", user_path_keys_array);
                 startActivity(mapViewIntent);
+                UserPathsActivity.this.finish();
             }
         });
 

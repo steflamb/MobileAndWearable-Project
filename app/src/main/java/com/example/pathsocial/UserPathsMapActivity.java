@@ -207,6 +207,7 @@ public class UserPathsMapActivity extends AppCompatActivity implements
                 listViewIntent.putExtra("user_name", user_name);
                 listViewIntent.putExtra("path_keys", user_path_keys_array);
                 startActivity(listViewIntent);
+                UserPathsMapActivity.this.finish();
             }
         });
 

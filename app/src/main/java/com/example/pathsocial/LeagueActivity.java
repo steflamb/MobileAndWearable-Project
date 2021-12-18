@@ -345,7 +345,7 @@ public class LeagueActivity extends AppCompatActivity {
             }
         });
 
-        follow_medium.setOnClickListener(new View.OnClickListener() {
+        follow_hard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(LeagueActivity.this, FollowActivity.class);
