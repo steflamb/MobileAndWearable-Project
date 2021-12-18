@@ -242,9 +242,16 @@ public class MyTrailActivities extends AppCompatActivity implements
         fab3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Location lastKnownLocation = mapboxMap.getLocationComponent().getLastKnownLocation();
+                double lat = lastKnownLocation.getLatitude();
+                double longitude = lastKnownLocation.getLongitude();
                 Intent intent = new Intent(MyTrailActivities.this, LeagueActivity.class);
-                intent.putExtra("message", 0);
+                Bundle b = new Bundle();
+                b.putDouble("lat",lat);
+                b.putDouble("lon", longitude);
+                intent.putExtras(b);
                 startActivity(intent);
+                finish();
             }
         });
 

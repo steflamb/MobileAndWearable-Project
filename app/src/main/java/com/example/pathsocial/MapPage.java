@@ -298,10 +298,22 @@ public class MapPage extends AppCompatActivity implements
                 }
             }
         });
+
+
+
+
+
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Location lastKnownLocation = mapboxMap.getLocationComponent().getLastKnownLocation();
+                double lat = lastKnownLocation.getLatitude();
+                double longitude = lastKnownLocation.getLongitude();
                 Intent intent = new Intent(MapPage.this, LeagueActivity.class);
+                Bundle b = new Bundle();
+                b.putDouble("lat",lat);
+                b.putDouble("lon", longitude);
+                intent.putExtras(b);
                 startActivity(intent);
                 finish();
             }
