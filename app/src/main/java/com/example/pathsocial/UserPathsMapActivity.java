@@ -72,7 +72,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MapPage extends AppCompatActivity implements
+public class UserPathsMapActivity extends AppCompatActivity implements
         OnMapReadyCallback, PermissionsListener {
 
     private PermissionsManager permissionsManager;
@@ -97,6 +97,10 @@ public class MapPage extends AppCompatActivity implements
     private ArrayList<String> user_paths;;
     private String user_name;
     private ArrayList<String> user_paths_keys;
+
+    private TextView username_text;
+    private String title;
+    private Button listViewButton;
 
     private List<Point> routeCoordinatesToFollow = new ArrayList<>();
 
@@ -133,65 +137,12 @@ public class MapPage extends AppCompatActivity implements
 
 
 
-    Boolean isFABOpen=false;
-    FloatingActionButton fab,fab1,fab2,fab3;
-    Button search_btn,followButton;
+    Button fab;
+    Button followButton;
 
 
     BottomSheetBehavior bottomSheetBehavior;
     TextView trailsNameTxt,trailsStepsTxt,trailsCaloriesTxt,userNameTxt,trailsDistanceTxt,trailsMedianSpeedTxt,trailsDateTxt,trailsDurationTxt,trailsDescriptionTxt,trailsWeatherTxt,likeTxt,dislikeTxt;
-
-
-    private Menu menu;
-
-
-
-
-    private void showFABMenu(){
-        isFABOpen=true;
-        fab1.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
-        fab2.animate().translationY(-getResources().getDimension(R.dimen.standard_105));
-        fab3.animate().translationY(-getResources().getDimension(R.dimen.standard_155));
-        fab1.setVisibility(View.VISIBLE);
-        fab2.setVisibility(View.VISIBLE);
-        fab3.setVisibility(View.VISIBLE);
-    }
-
-    private void closeFABMenu(){
-        isFABOpen=false;
-        fab1.animate().translationY(0);
-        fab2.animate().translationY(0);
-        fab3.animate().translationY(0);
-        fab1.setVisibility(View.INVISIBLE);
-        fab2.setVisibility(View.INVISIBLE);
-        fab3.setVisibility(View.INVISIBLE);
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        this.menu=menu;
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_logout:
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(MapPage.this, MainActivity.class)); //Go back to home page
-                finish();
-                return true;
-            case R.id.action_settings:
-                startActivity(new Intent(MapPage.this, RegisterMoreDataActivity.class));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -202,39 +153,34 @@ public class MapPage extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+// This contains the MapView in XML and needs to be called after the access token is configured.
+        setContentView(R.layout.activity_user_map_page);
+
+        Intent intent = getIntent();
+        // get data from intent
+        ArrayList<String> user_paths_array = (ArrayList<String>)intent.getSerializableExtra("paths");
+        String user_name = (String)intent.getSerializableExtra("user_name");
+        ArrayList<String> user_path_keys_array = (ArrayList<String>)intent.getSerializableExtra("path_keys");
+
+        username_text = findViewById(R.id.user_paths_title);
+        listViewButton = findViewById(R.id.user_paths_list_btn);
+
+        title = "Created by: " + user_name;
+        username_text.setText(title);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-
-
-
-
-
-
-
-
-
 
 // Mapbox access token is configured here. This needs to be called either in your application
 // object or in the same activity which contains the mapview.
         Mapbox.getInstance(this, "pk.eyJ1Ijoic3RlZmxhbWIiLCJhIjoiY2t0MWNkeXg0MGR6bzJvbzMwd2o2N2xvaSJ9.xzks_fIbucKQlpZlKSvTfA");
 
-// This contains the MapView in XML and needs to be called after the access token is configured.
-        setContentView(R.layout.activity_map_page);
 
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab1 = (FloatingActionButton) findViewById(R.id.fab1);
-        fab2 = (FloatingActionButton) findViewById(R.id.fab2);
-        fab3 = (FloatingActionButton) findViewById(R.id.fab3);
-        search_btn = (Button) findViewById(R.id.buttonSearch);
+        fab = (Button) findViewById(R.id.go_back);
         followButton = (Button) findViewById(R.id.button_follow);
-        fab1.setVisibility(View.INVISIBLE);
-        fab2.setVisibility(View.INVISIBLE);
-        fab3.setVisibility(View.INVISIBLE);
 
 
         ConstraintLayout bottomSheet = findViewById(R.id.bottom_sheet_2);
@@ -254,13 +200,23 @@ public class MapPage extends AppCompatActivity implements
         likeTxt= findViewById(R.id.likeCount);
         dislikeTxt= findViewById(R.id.dislikeCount);
 
+        listViewButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent listViewIntent = new Intent(getApplicationContext(), UserPathsActivity.class);
+                listViewIntent.putExtra("paths", user_paths_array);
+                listViewIntent.putExtra("user_name", user_name);
+                listViewIntent.putExtra("path_keys", user_path_keys_array);
+                startActivity(listViewIntent);
+            }
+        });
+
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 switch (newState) {
                     case BottomSheetBehavior.STATE_HIDDEN:
                         fab.setVisibility(View.VISIBLE);
-                        MapPage.this.mapboxMap.getStyle().removeLayer("linelayer");
-                        MapPage.this.mapboxMap.getStyle().removeSource("line-source");
+                        UserPathsMapActivity.this.mapboxMap.getStyle().removeLayer("linelayer");
+                        UserPathsMapActivity.this.mapboxMap.getStyle().removeSource("line-source");
                         clicked=false;
                         symbolManager.delete(symbol2);
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -269,7 +225,6 @@ public class MapPage extends AppCompatActivity implements
                     case BottomSheetBehavior.STATE_EXPANDED:
                     case BottomSheetBehavior.STATE_COLLAPSED:
                         fab.setVisibility(View.INVISIBLE);
-                        closeFABMenu();
                         break;
                     case BottomSheetBehavior.STATE_DRAGGING:
                     case BottomSheetBehavior.STATE_SETTLING:
@@ -281,69 +236,18 @@ public class MapPage extends AppCompatActivity implements
         });
 
 
-
-
-        database = FirebaseDatabase.getInstance();
-        refLocation = FirebaseDatabase.getInstance().getReference("trails/locations");
-        refPath = FirebaseDatabase.getInstance().getReference("trails/path");
-        geoFire = new GeoFire(refLocation);
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!isFABOpen){
-                    showFABMenu();
-                }else{
-                    closeFABMenu();
-                }
+                UserPathsMapActivity.this.finish();
             }
         });
-        fab1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MapPage.this, LeagueActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-        fab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MapPage.this, RecordActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-        fab3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MapPage.this, MyTrailActivities.class));
-                finish();
-            }
-        });
-
-        search_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                symbolManager.delete(symbols);
-                trailsFromDb = new ArrayList<>();
-                Location lastKnownLocation = mapboxMap.getLocationComponent().getLastKnownLocation();
-                double lat = lastKnownLocation.getLatitude();
-                double longitude = lastKnownLocation.getLongitude();
-//              Log.d("latlang", String.valueOf(lat) + String.valueOf(longitude));
-                GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(lat,longitude), 2);
-                findLocations(geoQuery);
-
-            }
-        });
-
 
         followButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(!owner) {
-                    Intent intent = new Intent(MapPage.this, FollowActivity.class);
+                    Intent intent = new Intent(UserPathsMapActivity.this, FollowActivity.class);
                     Log.d("tag", routeCoordinates.toString());
                     Bundle args = new Bundle();
                     args.putSerializable("ARRAYLIST", (Serializable) routeCoordinates);
@@ -359,127 +263,13 @@ public class MapPage extends AppCompatActivity implements
             }
         });
 
-
     }
 
-    public void findLocations(GeoQuery geoQuery)
-    {
-        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
-            @Override
-            public void onKeyEntered(String key, GeoLocation location) {
-                Log.d("query",String.format("Key %s entered the search area at [%f,%f]", key, location.latitude, location.longitude));
-
-
-                refPath.child(key).addListenerForSingleValueEvent(
-                        new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                Map<String,Object> data = (Map<String,Object>) dataSnapshot.getValue();
-                                String pathid=(String) data.get("pathid");
-                                String firstName=(String) data.get("firstName");
-                                String description=(String) data.get("description");
-                                String duration=(String) data.get("duration");
-                                String datetime=(String) data.get("datetime");
-                                double startingPointLat=(double) data.get("startingPointLat");
-                                double startingPointLongit=(double) data.get("startingPointLongit");
-                                Long stepsNubers=(Long) data.get("stepsNubers");
-                                Long calories=(Long) data.get("calories");
-                                Double distance=(Double) data.get("distance");
-                                Double medianSpeed=(Double) data.get("medianSpeed");
-                                String weather=(String) data.get("weather");
-                                String trailData=(String) data.get("trailData");
-                                String usrId=(String) data.get("usrId");
-                                Integer reviewPositive=Integer.valueOf(((Long) data.get("reviewPositive")).intValue());
-                                Integer reviewNegative=Integer.valueOf(((Long) data.get("reviewNegative")).intValue());
-                                refMap.put(pathid,key);
-
-
-
-                                TrailForDb newTrail=new TrailForDb(pathid,firstName,description,duration,datetime,startingPointLat,startingPointLongit,trailData,(int)stepsNubers.intValue(),(int)calories.intValue(),distance.doubleValue(),medianSpeed.doubleValue(),weather,usrId,reviewPositive,reviewNegative);
-                                trailsFromDb.add(newTrail);
-                                symbolManager.delete(symbols);
-                                trailsMap=new HashMap<Long,String>();
-                                trailsName=new HashMap<Long,String>();
-                                trailsSteps=new HashMap<Long,Integer>();
-                                trailsCalories=new HashMap<Long,Integer>();
-                                trailsDistance=new HashMap<Long,Double>();
-                                trailsMedianSpeed=new HashMap<Long,Double>();
-                                trailsDate=new HashMap<Long,String>();
-                                trailsDuration=new HashMap<Long,String>();
-                                trailsDescription=new HashMap<Long,String>();
-                                trailsWeather=new HashMap<Long,String>();
-                                trailID=new HashMap<Long,TrailForDb>();
-                                symbolMap=new HashMap<Long,Symbol>();
-                                usrMap=new HashMap<Long,String>();
-                                idMap=new HashMap<Long,String>();
-                                likeCounter=new HashMap<Long,Integer>();
-                                dislikeCounter=new HashMap<Long,Integer>();
-                                for(TrailForDb trail : trailsFromDb)
-                                {
-                                    symbol = symbolManager.create(new SymbolOptions()
-                                            .withLatLng(new LatLng(trail.startingPointLat,trail.startingPointLongit))
-                                            .withIconImage("space")
-                                            .withIconSize(1.5f)
-                                            .withDraggable(false));
-                                    trailsMap.put(symbol.getId(),trail.trailData);
-                                    trailsName.put(symbol.getId(),trail.firstName);
-                                    trailsCalories.put(symbol.getId(),trail.calories);
-                                    trailsSteps.put(symbol.getId(),trail.stepsNubers);
-                                    trailsDate.put(symbol.getId(),trail.datetime);
-                                    trailsDuration.put(symbol.getId(),trail.duration);
-                                    trailsMedianSpeed.put(symbol.getId(),trail.medianSpeed);
-                                    trailsDistance.put(symbol.getId(),trail.distance);
-                                    trailsDescription.put(symbol.getId(),trail.description);
-                                    trailsWeather.put(symbol.getId(),trail.weather);
-                                    trailID.put(symbol.getId(),trail);
-                                    symbolMap.put(symbol.getId(),symbol);
-                                    idMap.put(symbol.getId(),refMap.get(trail.pathid));
-                                    usrMap.put(symbol.getId(),trail.usrId);
-                                    symbols.add(symbol);
-                                    routeCoordinates=trail.trailData;
-                                    likeCounter.put(symbol.getId(),trail.reviewPositive);
-                                    dislikeCounter.put(symbol.getId(),trail.reviewNegative);
-
-
-
-                                }
-
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                //
-                            }
-                        });
-            }
-
-            @Override
-            public void onKeyExited(String key) {
-                Log.d("query",String.format("Key %s is no longer in the search area", key));
-            }
-
-            @Override
-            public void onKeyMoved(String key, GeoLocation location) {
-                Log.d("query",String.format("Key %s moved within the search area to [%f,%f]", key, location.latitude, location.longitude));
-            }
-
-            @Override
-            public void onGeoQueryReady() {
-                Log.d("query","All initial data has been loaded and events have been fired!");
-
-            }
-
-            @Override
-            public void onGeoQueryError(DatabaseError error) {
-                Log.d("query","There was an error with this query: " + error);
-            }
-        });
-    }
 //line 425 changed!!!
 
     @Override
     public void onMapReady(@NonNull final MapboxMap mapboxMap) {
-        MapPage.this.mapboxMap = mapboxMap;
+        UserPathsMapActivity.this.mapboxMap = mapboxMap;
 
         mapboxMap.setStyle(new Style.Builder().fromUri("mapbox://styles/steflamb/ckuf5kglt9thk17o3b0navprv"),
                 new Style.OnStyleLoaded() {
@@ -584,7 +374,7 @@ public class MapPage extends AppCompatActivity implements
                                         @Override
                                         public void onClick(View view) {
                                             // open the new view to show the list of paths created by this user
-                                            Intent intent = new Intent(MapPage.this, UserPathsActivity.class);
+                                            Intent intent = new Intent(UserPathsMapActivity.this, UserPathsActivity.class);
                                             intent.putExtra("paths", user_paths);
                                             intent.putExtra("user_name", user_name);
                                             intent.putExtra("path_keys", user_paths_keys);
@@ -641,6 +431,98 @@ public class MapPage extends AppCompatActivity implements
 
                     }
                 });
+
+        // get paths for the selected user
+        // get data from intent
+        Intent intent = getIntent();
+        ArrayList<String> user_paths_keys = (ArrayList<String>)intent.getSerializableExtra("path_keys");
+
+        database = FirebaseDatabase.getInstance();
+        refLocation = FirebaseDatabase.getInstance().getReference("trails/locations");
+        refPath = FirebaseDatabase.getInstance().getReference("trails/path");
+        geoFire = new GeoFire(refLocation);
+
+        trailsFromDb = new ArrayList<>();
+
+        for (String key: user_paths_keys) {
+            refPath.child(key).addListenerForSingleValueEvent(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Map<String, Object> data = (Map<String, Object>) dataSnapshot.getValue();
+                            String pathid = (String) data.get("pathid");
+                            String firstName = (String) data.get("firstName");
+                            String description = (String) data.get("description");
+                            String duration = (String) data.get("duration");
+                            String datetime = (String) data.get("datetime");
+                            double startingPointLat = (double) data.get("startingPointLat");
+                            double startingPointLongit = (double) data.get("startingPointLongit");
+                            Long stepsNubers = (Long) data.get("stepsNubers");
+                            Long calories = (Long) data.get("calories");
+                            Double distance = (Double) data.get("distance");
+                            Double medianSpeed = (Double) data.get("medianSpeed");
+                            String weather = (String) data.get("weather");
+                            String trailData = (String) data.get("trailData");
+                            String usrId = (String) data.get("usrId");
+                            Integer reviewPositive = Integer.valueOf(((Long) data.get("reviewPositive")).intValue());
+                            Integer reviewNegative = Integer.valueOf(((Long) data.get("reviewNegative")).intValue());
+                            refMap.put(pathid, key);
+
+
+                            TrailForDb newTrail = new TrailForDb(pathid, firstName, description, duration, datetime, startingPointLat, startingPointLongit, trailData, (int) stepsNubers.intValue(), (int) calories.intValue(), distance.doubleValue(), medianSpeed.doubleValue(), weather, usrId, reviewPositive, reviewNegative);
+                            trailsFromDb.add(newTrail);
+                            symbolManager.delete(symbols);
+                            trailsMap = new HashMap<Long, String>();
+                            trailsName = new HashMap<Long, String>();
+                            trailsSteps = new HashMap<Long, Integer>();
+                            trailsCalories = new HashMap<Long, Integer>();
+                            trailsDistance = new HashMap<Long, Double>();
+                            trailsMedianSpeed = new HashMap<Long, Double>();
+                            trailsDate = new HashMap<Long, String>();
+                            trailsDuration = new HashMap<Long, String>();
+                            trailsDescription = new HashMap<Long, String>();
+                            trailsWeather = new HashMap<Long, String>();
+                            trailID = new HashMap<Long, TrailForDb>();
+                            symbolMap = new HashMap<Long, Symbol>();
+                            usrMap = new HashMap<Long, String>();
+                            idMap = new HashMap<Long, String>();
+                            likeCounter = new HashMap<Long, Integer>();
+                            dislikeCounter = new HashMap<Long, Integer>();
+                            for (TrailForDb trail : trailsFromDb) {
+                                symbol = symbolManager.create(new SymbolOptions()
+                                        .withLatLng(new LatLng(trail.startingPointLat, trail.startingPointLongit))
+                                        .withIconImage("space")
+                                        .withIconSize(1.5f)
+                                        .withDraggable(false));
+                                trailsMap.put(symbol.getId(), trail.trailData);
+                                trailsName.put(symbol.getId(), trail.firstName);
+                                trailsCalories.put(symbol.getId(), trail.calories);
+                                trailsSteps.put(symbol.getId(), trail.stepsNubers);
+                                trailsDate.put(symbol.getId(), trail.datetime);
+                                trailsDuration.put(symbol.getId(), trail.duration);
+                                trailsMedianSpeed.put(symbol.getId(), trail.medianSpeed);
+                                trailsDistance.put(symbol.getId(), trail.distance);
+                                trailsDescription.put(symbol.getId(), trail.description);
+                                trailsWeather.put(symbol.getId(), trail.weather);
+                                trailID.put(symbol.getId(), trail);
+                                symbolMap.put(symbol.getId(), symbol);
+                                idMap.put(symbol.getId(), refMap.get(trail.pathid));
+                                usrMap.put(symbol.getId(), trail.usrId);
+                                symbols.add(symbol);
+                                routeCoordinates = trail.trailData;
+                                likeCounter.put(symbol.getId(), trail.reviewPositive);
+                                dislikeCounter.put(symbol.getId(), trail.reviewNegative);
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+        }
+
     }
 
     @SuppressWarnings( {"MissingPermission"})

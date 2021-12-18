@@ -101,4 +101,6 @@ Suspendisse in ipsum dapibus, sagittis justo eget, auctor tellus. Nam sed lorem 
     <string name="gender_m">Male body type</string>
     <string name="user_paths">Created by </string>
     <string name="user_paths_map_btn">Map View</string>
+    <string name="go_back_btn">Go back</string>
+    <string name="user_paths_list_btn">List View</string>
 </resources>
